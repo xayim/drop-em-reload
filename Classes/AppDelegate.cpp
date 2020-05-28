@@ -23,7 +23,13 @@
  ****************************************************************************/
 
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
+#include "TitleScreen.h"
+#ifdef SDKBOX_ENABLED
+#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
+#endif
+#ifdef SDKBOX_ENABLED
+#include "PluginShare/PluginShare.h"
+#endif
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -78,6 +84,13 @@ static int register_all_packages()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+#ifdef SDKBOX_ENABLED
+    sdkbox::PluginSdkboxAds::init();
+#endif
+#ifdef SDKBOX_ENABLED
+    sdkbox::PluginShare::init();
+#endif
+    
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
@@ -118,7 +131,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
+    auto scene = TitleScreen::create_scene();
 
     // run
     director->runWithScene(scene);

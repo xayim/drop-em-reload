@@ -1,0 +1,166 @@
+#include "RopeStructure.h"
+#include "Definitions.h"
+#include "GameSettings.h"
+#include "Utility.h"
+
+
+RopeStructure::RopeStructure(b2World * world, RopeStructureData * object, cocos2d::Node * parent)
+{
+    this->world = world;
+    this->data_object = object;
+    this->parent = parent;
+    
+    
+    jammer = new Jammer(world, object->jammer_object, parent);
+    
+    
+    for (unsigned int i = 0; i < object->hinge_object_list.size(); ++i)
+    {
+        Hinge * hinge = new Hinge(world, object->hinge_object_list.at(i), parent);
+        
+        if (i == 0) hinge->enable_rotation(-15);
+        else        hinge->enable_rotation(15);
+        
+        hinge_list.push_back(hinge);
+    }
+    
+    
+    for (unsigned int i = 0; i < object->rope_object_list.size(); ++i)
+    {
+        Rope * rope = new Rope(world, object->rope_object_list.at(i), parent);
+        
+        bind_joint(hinge_list.at(i)->body, rope->rope_body_list.at(rope->rope_body_list.size()-1)->body, b2Vec2(0.0, 0.0), b2Vec2 (0.0, 0.2));
+        bind_joint(jammer->body, rope->rope_body_list.at(0)->body, b2Vec2(0.0, 0.0), b2Vec2 (0.0, -0.2));
+        
+        rope_list.push_back(rope);
+    }
+}
+
+RopeStructure::~RopeStructure()
+{
+    jammer->~Jammer();
+    delete data_object->jammer_object;
+    
+    for (unsigned int i = 0; i < hinge_list.size(); ++i)
+    {
+        hinge_list.at(i)->~Hinge();
+        
+        delete data_object->hinge_object_list.at(i);
+    }
+
+    for (unsigned int i = 0; i < rope_list.size(); ++i)
+    {
+        rope_list.at(i)->~Rope();
+        delete data_object->rope_object_list.at(i);
+    }
+}
+
+
+void RopeStructure::set_active(bool active)
+{
+    jammer->set_active(active);
+    
+    for (unsigned int i = 0; i < rope_list.size(); ++i) rope_list.at(i)->set_active(active);
+}
+
+
+void RopeStructure::reset()
+{
+    jammer->~Jammer();
+    jammer = new Jammer(world, data_object->jammer_object, parent);
+    
+    
+    for (unsigned int i = 0; i < data_object->rope_object_list.size(); ++i)
+    {
+        Rope * rope = new Rope(world, data_object->rope_object_list.at(i), parent);
+        
+        bind_joint(hinge_list.at(i)->body, rope->rope_body_list.at(rope->rope_body_list.size()-1)->body, b2Vec2(0.0, 0.0), b2Vec2 (0.0, 0.2));
+        bind_joint(jammer->body, rope->rope_body_list.at(0)->body, b2Vec2(0.0, 0.0), b2Vec2 (0.0, -0.2));
+        
+        rope_list.push_back(rope);
+    }
+}
+
+
+unsigned int RopeStructure::remove_rope(unsigned int index)
+{
+    Rope * rope = rope_list.at(index%rope_list.size());
+    
+    
+    for (std::vector<Rope *>::iterator itr = rope_list.begin(); itr != rope_list.end(); ++itr)
+    {
+        if (rope == *itr)
+        {
+            rope->~Rope();
+            rope_list.erase(itr);
+            break;
+        }
+    }
+    
+    return (unsigned int)rope_list.size();
+}
+
+
+void RopeStructure::bind_joint(b2Body *body_a, b2Body *body_b, b2Vec2 anchor_a, b2Vec2 anchor_b)
+{
+    b2RevoluteJointDef joint_def;
+    
+    joint_def.enableLimit = false;
+    joint_def.enableMotor = false;
+    joint_def.collideConnected = false;
+    joint_def.lowerAngle = 0.f;
+    joint_def.upperAngle = 0.f;
+    joint_def.referenceAngle = 0.f;
+    joint_def.motorSpeed = 0.f;
+    joint_def.maxMotorTorque = 0.f;
+    joint_def.bodyA = body_a;
+    joint_def.bodyB = body_b;
+    joint_def.localAnchorA.Set(anchor_a.x, anchor_a.y);
+    joint_def.localAnchorB.Set(anchor_b.x, anchor_b.y);
+    
+    
+    world->CreateJoint(&joint_def);
+}
+
+
+cocos2d::ui::Button * RopeStructure::create_button_hinge(unsigned int tag)
+{
+    cocos2d::ui::Button * btn_hinge = cocos2d::ui::Button::create("res/ui/btn_hook.png", "res/ui/btn_hook_pressed.png");
+    btn_hinge->setAnchorPoint(cocos2d::Vec2(0.5, 0));
+    btn_hinge->setPosition(cocos2d::Vec2(hinge_list.at(tag)->sprite->getPosition().x, hinge_list.at(tag)->sprite->getPosition().y+hinge_list.at(tag)->sprite->getContentSize().height/2*hinge_list.at(tag)->sprite->getScale()));
+    
+    btn_hinge->setScale(0.4f, ((2048.f/2)*Utility::scale_vector().x)-btn_hinge->getPosition().y);
+    btn_hinge->setOpacity(191);
+    btn_hinge->setTag(tag);
+    btn_hinge->setUserData(this);
+    btn_hinge->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
+    
+    
+    return btn_hinge;
+}
+
+
+cocos2d::ui::Button * RopeStructure::create_button_select()
+{
+    cocos2d::ui::Button * btn_select = cocos2d::ui::Button::create("res/ui/btn_select_rope_structure.png");
+    btn_select->setPosition(cocos2d::Vec2(jammer->sprite->getPosition().x, jammer->sprite->getPosition().y+jammer->sprite->getContentSize().height/2*jammer->sprite->getScale()));
+    btn_select->setScale((hinge_list.at(1)->sprite->getPosition().x-hinge_list.at(0)->sprite->getPosition().x)/btn_select->getContentSize().width,
+                         ((hinge_list.at(1)->sprite->getPosition().x-hinge_list.at(0)->sprite->getPosition().x)/btn_select->getContentSize().width)/2);
+    
+    btn_select->setOpacity(0);
+    btn_select->setUserData(this);
+    btn_select->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
+    
+    return btn_select;
+}
+
+
+void RopeStructure::update()
+{
+    jammer->update();
+    
+    for (unsigned int i = 0; i < rope_list.size(); ++i)
+    {
+        rope_list.at(i)->update();
+    }
+}
