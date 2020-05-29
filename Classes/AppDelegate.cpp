@@ -24,12 +24,12 @@
 
 #include "AppDelegate.h"
 #include "TitleScreen.h"
-#ifdef SDKBOX_ENABLED
-#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
-#endif
-#ifdef SDKBOX_ENABLED
-#include "PluginShare/PluginShare.h"
-#endif
+//#ifdef SDKBOX_ENABLED
+//#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
+//#endif
+//#ifdef SDKBOX_ENABLED
+//#include "PluginShare/PluginShare.h"
+//#endif
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -84,12 +84,12 @@ static int register_all_packages()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
-#ifdef SDKBOX_ENABLED
-    sdkbox::PluginSdkboxAds::init();
-#endif
-#ifdef SDKBOX_ENABLED
-    sdkbox::PluginShare::init();
-#endif
+//#ifdef SDKBOX_ENABLED
+//    sdkbox::PluginSdkboxAds::init();
+//#endif
+//#ifdef SDKBOX_ENABLED
+//    sdkbox::PluginShare::init();
+//#endif
     
     // initialize director
     auto director = Director::getInstance();
