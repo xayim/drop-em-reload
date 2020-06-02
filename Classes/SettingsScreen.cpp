@@ -218,9 +218,9 @@ void SettingsScreen::callback_store(cocos2d::Ref *pSender)
 
 void SettingsScreen::callback_help(cocos2d::Ref *pSender)
 {
-    cocos2d::Scene * scene = HelpScreen::create_scene();
-    
-    cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, scene));
+//    cocos2d::Scene * scene = HelpScreen::create_scene();
+//    
+//    cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, scene));
     
     Audio::instance()->play_sfx_button_click();
 }
