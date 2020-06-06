@@ -9,8 +9,8 @@
 #define PTM_RATIO           (cocos2d::Director::getInstance()->getWinSize().height/PHYSICS_WORLD_HEIGHT)
 #define GAMEPLAY_HINGE      0
 #define GAMEPLAY_SELECT     1
-#define UI_BUTTON_HEIGHT    (160*(Utility::window_scale_x()))
-#define UI_BORDER_MARGIN    16
+#define UI_MARGIN_X     16
+#define UI_MARGIN_Y     8
 #define FONT_SKRANJI_REG        "fonts/Skranji-Regular.ttf"
 #define FONT_SKRANJI_BOLD       "fonts/Skranji-Bold.ttf"
 #define COIN_PACKAGE_1      160
