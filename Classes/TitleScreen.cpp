@@ -26,6 +26,8 @@ bool TitleScreen::init()
     }
     
     printf("Window Size: %f, %f\n", Utility::window_size().width, Utility::window_size().height);
+    printf("Content Scale: %f\n", Utility::content_scale());
+    
     
     Audio::initialise();
     
@@ -36,8 +38,10 @@ bool TitleScreen::init()
     addChild(background);
     
     
-    text = cocos2d::Label::createWithTTF("TAP TO PLAY", FONT_SKRANJI_REG, 32);
-    text->setPosition(cocos2d::Vec2(Utility::window_center().x, text->getContentSize().height*1.5));
+    text = cocos2d::Label::createWithTTF("TAP TO PLAY", FONT_SKRANJI_REG, 24);
+    text->setAnchorPoint(cocos2d::Vec2(0.5, 0.0));
+    text->enableOutline(cocos2d::Color4B::BLACK, 1);
+    text->setPosition(cocos2d::Vec2(Utility::window_center().x, Utility::window_bottom()));
     addChild(text);
     
     

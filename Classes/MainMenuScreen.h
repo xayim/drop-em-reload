@@ -21,6 +21,10 @@ private:
     CREATE_FUNC(MainMenuScreen);
     ~MainMenuScreen();
     
+    void init_ui();
+    
+    cocos2d::ui::ScrollView * create_scrollview(unsigned int items_count);
+    
     cocos2d::Sprite * create_sprite_retry_cnt();
     cocos2d::Sprite * create_sprite_coin_cnt();
     cocos2d::ui::Button * create_btn_options();

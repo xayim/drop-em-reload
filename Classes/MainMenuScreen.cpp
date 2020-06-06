@@ -30,6 +30,9 @@ bool MainMenuScreen::init()
     }
     
     
+    init_ui();
+    
+    
 //    sdkbox::IAP::setListener(this);
 //    sdkbox::IAP::refresh();
     
@@ -43,7 +46,7 @@ bool MainMenuScreen::init()
     
     
 //    sdkbox::SocialShareInfo share_info;
-////    
+//
 //    share_info.title = "Awesome Game!";
 //    share_info.showDialog = true;
 //    share_info.text = "I play Drop 'Em, you should play too!";
@@ -56,137 +59,10 @@ bool MainMenuScreen::init()
     
     
     
-    cocos2d::UserDefault * user_defaults = cocos2d::UserDefault::getInstance();
-    
-    cocos2d::Size window_size = Utility::window_size();
-    cocos2d::Vec2 window_center = Utility::window_center();
-    unsigned int levels_count = Utility::file_count("level_data");
-    std::stringstream string_stream;
-    cocos2d::Label * level_title;
-    cocos2d::ui::Button * level_button;
-    cocos2d::ui::Layout * level_button_layout;
-    bool is_locked;
-    
     
 //    Background * background = Background::create(world_id);
 //    background->setPosition(window_center);
 //    addChild(background);
-    
-    
-    scrollview_ = cocos2d::ui::ScrollView::create();
-    scrollview_->setDirection(cocos2d::ui::ScrollView::Direction::HORIZONTAL);
-    scrollview_->setContentSize(window_size);
-    scrollview_->setInnerContainerSize(cocos2d::Size(320*(levels_count-1)+(window_size.width), window_size.height));
-    scrollview_->setTouchEnabled(true);
-    scrollview_->setBounceEnabled(true);
-    scrollview_->setScrollBarEnabled(false);
-    scrollview_->scrollToPercentHorizontal(GameSettings::scroll_percentage(), 0, false);
-    addChild(scrollview_);
-    
-    
-    for (unsigned int i = 0; i < levels_count; ++i)
-    {
-        
-        level_title = cocos2d::Label::createWithTTF(std::to_string(i+1), "fonts/kenvector_future_thin.ttf", 72);
-        level_title->setColor(cocos2d::Color3B::WHITE);
-        level_title->enableOutline(cocos2d::Color4B::BLACK, 2);
-        
-        
-        string_stream.str("");
-        string_stream << "res/ui/base_level.png";
-        is_locked = false;
-        
-        if (!UNLOCK_LEVELS)
-        {
-            string_stream.str("");
-            string_stream << "level_unlocked" << i;
-         
-            if (i == 0)
-            {
-                string_stream.str("");
-                string_stream << "res/ui/base_level.png";
-                is_locked = false;
-            }
-            else if (!user_defaults->getBoolForKey(string_stream.str().c_str(), false))
-            {
-                string_stream.str("");
-                string_stream << "res/ui/base_level_inactive.png";
-                is_locked = true;
-            }
-        }
-        
-        
-        level_button = cocos2d::ui::Button::create(string_stream.str().c_str());
-        level_button->setTitleLabel(level_title);
-        level_button->setTag(i);
-        level_button->setZoomScale(0.f);
-        
-        if (!is_locked)
-            level_button->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_select_level, this));
-        else
-            level_button->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_select_level_locked, this));
-        
-//        string_stream.str("");
-//        string_stream << "level_star_count" << i;
-//        unsigned int stars_recieved_count = user_defaults->getIntegerForKey(string_stream.str().c_str(), 0);
-//        unsigned int stars_missed_count = 3-stars_recieved_count;
-        
-//        for (unsigned int j = 0; j < stars_recieved_count; ++j)
-//        {
-//            cocos2d::ui::Button * star = cocos2d::ui::Button::create("res/ui/star_active.png");
-//
-//            star->setPosition(cocos2d::Vec2(64+(64*j), 64));
-//            level_button->addChild(star);
-//        }
-        
-//        for (unsigned int j = 0; j < stars_missed_count; ++j)
-//        {
-//            cocos2d::ui::Button * star = cocos2d::ui::Button::create("res/ui/star_inactive.png");
-//
-//            if (is_locked)
-//                star->loadTextureNormal("res/ui/star_inactive_grey.png");
-//            else
-//                star->loadTextureNormal("res/ui/star_inactive.png");
-//
-//
-//            star->setPosition(cocos2d::Vec2(64+(64*j), 64));
-//            level_button->addChild(star);
-//        }
-        
-        
-        level_button_layout = cocos2d::ui::Layout::create();
-        level_button_layout->setPosition(cocos2d::Vec2(window_center.x+(i*320), window_center.y));
-        level_button_layout->setContentSize(level_button->getContentSize());
-        level_button_layout->addChild(level_button);
-        
-        
-        scrollview_->addChild(level_button_layout);
-    }
-    
-
-    btn_retry_ = create_sprite_retry_cnt();
-    addChild(btn_retry_);
-    
-    label_retry_cnt_ = create_label_retry_cnt();
-    addChild(label_retry_cnt_);
-    
-    
-    btn_coin_ = create_sprite_coin_cnt();
-    addChild(btn_coin_);
-    
-    label_coin_cnt_ = create_label_coin_cnt();
-    addChild(label_coin_cnt_);
-    
-
-    btn_options_ = create_btn_options();
-    addChild(btn_options_);
-    
-    
-    if (PlayerProfile::ads_enabled())
-    {
-        btn_remove_ads = create_btn_remove_ads();
-        addChild(btn_remove_ads);
-    }
     
     
     
@@ -203,13 +79,125 @@ MainMenuScreen::~MainMenuScreen()
 }
 
 
+void MainMenuScreen::init_ui()
+{
+    scrollview_ = create_scrollview(Utility::file_count("level_data"));
+    addChild(scrollview_);
+    
+    
+    btn_retry_ = create_sprite_retry_cnt();
+    btn_retry_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_top()));
+    addChild(btn_retry_);
+    
+    label_retry_cnt_ = create_label_retry_cnt();
+    label_retry_cnt_->setPosition(cocos2d::Vec2(btn_retry_->getPosition().x+(btn_retry_->getContentSize().width*btn_retry_->getScale()),
+                                                btn_retry_->getPosition().y-(btn_retry_->getContentSize().height*btn_retry_->getScale())));
+    addChild(label_retry_cnt_);
+    
+    
+    btn_coin_ = create_sprite_coin_cnt();
+    btn_coin_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_bottom()));
+    addChild(btn_coin_);
+    
+    label_coin_cnt_ = create_label_coin_cnt();
+    label_coin_cnt_->setPosition(cocos2d::Vec2(btn_coin_->getPosition().x+(btn_coin_->getContentSize().width*btn_retry_->getScale()),
+                                               btn_coin_->getPosition().y));
+    addChild(label_coin_cnt_);
+    
+    
+    btn_options_ = create_btn_options();
+    btn_options_->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()));
+    addChild(btn_options_);
+    
+    
+    if (PlayerProfile::ads_enabled())
+    {
+        btn_remove_ads = create_btn_remove_ads();
+        btn_remove_ads->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_bottom()));
+        addChild(btn_remove_ads);
+    }
+}
+
+
+cocos2d::ui::ScrollView * MainMenuScreen::create_scrollview(unsigned int items_count)
+{
+    cocos2d::Size window_size = Utility::window_size();
+    cocos2d::Vec2 window_center = Utility::window_center();
+    
+    
+    cocos2d::ui::ScrollView * scrollview = cocos2d::ui::ScrollView::create();
+    scrollview->setDirection(cocos2d::ui::ScrollView::Direction::HORIZONTAL);
+    scrollview->setContentSize(window_size);
+    scrollview->setInnerContainerSize(cocos2d::Size(320*(items_count-1)+(window_size.width), window_size.height));
+    scrollview->setTouchEnabled(true);
+    scrollview->setBounceEnabled(true);
+    scrollview->setScrollBarEnabled(false);
+    scrollview->scrollToPercentHorizontal(GameSettings::scroll_percentage(), 0, false);
+    
+    
+    for (unsigned int i = 0; i < items_count; ++i)
+    {
+        cocos2d::Label * level_title = cocos2d::Label::createWithTTF(std::to_string(i+1), FONT_SKRANJI_BOLD, 48);
+        level_title->setColor(cocos2d::Color3B::WHITE);
+        level_title->enableOutline(cocos2d::Color4B::BLACK, 1);
+        
+        
+        std::stringstream string_stream;
+        string_stream << "res/ui/base_level.png";
+        bool is_locked = false;
+        
+        if (!UNLOCK_LEVELS)
+        {
+            string_stream.str("");
+            string_stream << "level_unlocked" << i;
+            
+            if (i == 0)
+            {
+                string_stream.str("");
+                string_stream << "res/ui/base_level.png";
+                is_locked = false;
+            }
+            else if (!cocos2d::UserDefault::getInstance()->getBoolForKey(string_stream.str().c_str(), false))
+            {
+                string_stream.str("");
+                string_stream << "res/ui/base_level_inactive.png";
+                is_locked = true;
+            }
+        }
+        
+        
+        cocos2d::ui::Button * level_button = cocos2d::ui::Button::create(string_stream.str().c_str());
+        level_button->setTitleLabel(level_title);
+        level_button->setTag(i);
+        level_button->setZoomScale(0.f);
+        
+        if (!is_locked)
+            level_button->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_select_level, this));
+        else
+            level_button->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_select_level_locked, this));
+        
+        
+        
+        cocos2d::ui::Layout * level_button_layout = cocos2d::ui::Layout::create();
+        level_button_layout->setPosition(cocos2d::Vec2(window_center.x+(i*320), window_center.y));
+        level_button_layout->setContentSize(level_button->getContentSize());
+        level_button_layout->addChild(level_button);
+        
+        
+        scrollview->addChild(level_button_layout);
+    }
+    
+    
+    return scrollview;
+}
+
+
 cocos2d::Sprite * MainMenuScreen::create_sprite_retry_cnt()
 {
     cocos2d::Sprite * spr_retry = cocos2d::Sprite::create("res/ui/btn_retry_2.png");
     
     spr_retry->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
     spr_retry->setScale(Utility::content_scale());
-    spr_retry->setPosition(cocos2d::Vec2(Utility::window_left(), Utility::window_top()));
 //    btn_retry->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_get_retry, this));
     
     
@@ -219,11 +207,10 @@ cocos2d::Sprite * MainMenuScreen::create_sprite_retry_cnt()
 
 cocos2d::Sprite * MainMenuScreen::create_sprite_coin_cnt()
 {
-    cocos2d::Sprite * spr_coin = cocos2d::Sprite::create("res/ui/coin_icon.png");
+    cocos2d::Sprite * spr_coin = cocos2d::Sprite::create("res/ui/icon_coin.png");
     
-    spr_coin->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
+    spr_coin->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
     spr_coin->setScale(Utility::content_scale());
-    spr_coin->setPosition(cocos2d::Vec2(Utility::window_left(), Utility::window_top()-UI_BUTTON_HEIGHT-UI_BORDER_MARGIN));
 //    btn_coin->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_get_coin, this));
     
     
@@ -237,7 +224,6 @@ cocos2d::ui::Button * MainMenuScreen::create_btn_options()
     
     btn_options->setAnchorPoint(cocos2d::Vec2(1.0, 1.0));
     btn_options->setScale(Utility::content_scale());
-    btn_options->setPosition(cocos2d::Vec2(Utility::window_right(), Utility::window_top()));
     btn_options->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_options, this));
 
     
@@ -251,7 +237,6 @@ cocos2d::ui::Button * MainMenuScreen::create_btn_remove_ads()
     
     btn_remove_ads->setAnchorPoint(cocos2d::Vec2(1.0, 0.0));
     btn_remove_ads->setScale(Utility::content_scale());
-    btn_remove_ads->setPosition(cocos2d::Vec2(Utility::window_right(), Utility::window_bottom()));
     btn_remove_ads->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_remove_ads, this));
 
     
@@ -261,14 +246,12 @@ cocos2d::ui::Button * MainMenuScreen::create_btn_remove_ads()
 
 cocos2d::Label * MainMenuScreen::create_label_retry_cnt()
 {
-    cocos2d::Label * label_retry_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::retry_count()), FONT_SKRANJI_REG, 20);
+    cocos2d::Label * label_retry_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::retry_count()), FONT_SKRANJI_REG, 16);
     
-    label_retry_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
-    label_retry_cnt->setPosition(cocos2d::Vec2(Utility::window_left()+UI_BUTTON_HEIGHT,
-                                               Utility::window_top()));
+    label_retry_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
     label_retry_cnt->setColor(cocos2d::Color3B(192, 177, 170));
     label_retry_cnt->enableOutline(cocos2d::Color4B::BLACK, 1);
-    label_retry_cnt->enableShadow();
+//    label_retry_cnt->enableShadow();
     
     
     return label_retry_cnt;
@@ -277,14 +260,12 @@ cocos2d::Label * MainMenuScreen::create_label_retry_cnt()
 
 cocos2d::Label * MainMenuScreen::create_label_coin_cnt()
 {
-    cocos2d::Label * label_coin_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::coin_count()), FONT_SKRANJI_REG, 20);
+    cocos2d::Label * label_coin_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::coin_count()), FONT_SKRANJI_REG, 16);
     
-    label_coin_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
-    label_coin_cnt->setPosition(cocos2d::Vec2(Utility::window_left()+UI_BUTTON_HEIGHT,
-                                              Utility::window_top()-UI_BUTTON_HEIGHT));
+    label_coin_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
     label_coin_cnt->setColor(cocos2d::Color3B(192, 177, 170));
     label_coin_cnt->enableOutline(cocos2d::Color4B::BLACK, 1);
-    label_coin_cnt->enableShadow();
+//    label_coin_cnt->enableShadow();
     
     
     return label_coin_cnt;

@@ -15,6 +15,7 @@ private:
     CREATE_FUNC(SettingsScreen);
     ~SettingsScreen();
     
+    
     void callback_back(cocos2d::Ref *pSender);
     void callback_music(cocos2d::Ref *pSender);
     void callback_sfx(cocos2d::Ref *pSender);
@@ -26,13 +27,13 @@ private:
     
     void layout_buttons();
     
-    cocos2d::ui::Button * btn_back = nullptr;
-    cocos2d::ui::Button * btn_sfx = nullptr;
-    cocos2d::ui::Button * btn_music = nullptr;
-    cocos2d::ui::Button * btn_gameplay = nullptr;
-    cocos2d::ui::Button * btn_store = nullptr;
-    cocos2d::ui::Button * btn_help = nullptr;
-    cocos2d::Node * panel = nullptr;
+    cocos2d::ui::Button * btn_back_ = nullptr;
+    cocos2d::ui::Button * btn_sfx_ = nullptr;
+    cocos2d::ui::Button * btn_music_ = nullptr;
+    cocos2d::ui::Button * btn_gameplay_ = nullptr;
+    cocos2d::ui::Button * btn_store_ = nullptr;
+    cocos2d::ui::Button * btn_help_ = nullptr;
+    cocos2d::Node * panel_ = nullptr;
 };
 
 
