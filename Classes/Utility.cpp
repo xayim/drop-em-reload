@@ -75,7 +75,7 @@ float Utility::window_right()
 }
 
 
-float Utility::unsafe_width()
+float Utility::unsafe_margin()
 {
     return window_size().width-window_right();
 }
@@ -85,6 +85,30 @@ float Utility::unsafe_width()
 //{
 //    return cocos2d::Director::getInstance()->getWinSize().height/PHYSICS_WORLD_HEIGHT;
 //}
+
+
+float Utility::ui_top()
+{
+    return cocos2d::Director::getInstance()->getSafeAreaRect().origin.y+cocos2d::Director::getInstance()->getSafeAreaRect().size.height-UI_MARGIN_Y;
+}
+
+
+float Utility::ui_bottom()
+{
+    return cocos2d::Director::getInstance()->getSafeAreaRect().origin.y+UI_MARGIN_Y;
+}
+
+
+float Utility::ui_left()
+{
+    return cocos2d::Director::getInstance()->getSafeAreaRect().origin.x+UI_MARGIN_X;
+}
+
+
+float Utility::ui_right()
+{
+    return cocos2d::Director::getInstance()->getSafeAreaRect().origin.x+cocos2d::Director::getInstance()->getSafeAreaRect().size.width-UI_MARGIN_X;
+}
 
 
 unsigned int Utility::file_count(const std::string& path)

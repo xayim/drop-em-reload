@@ -37,7 +37,12 @@ public:
     static float window_bottom();
     static float window_left();
     static float window_right();
-    static float unsafe_width();
+    static float unsafe_margin();
+    
+    static float ui_top();
+    static float ui_bottom();
+    static float ui_left();
+    static float ui_right();
 };
 
 #endif /* Utility_h */
