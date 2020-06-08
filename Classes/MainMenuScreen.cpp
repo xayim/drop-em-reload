@@ -29,6 +29,7 @@ bool MainMenuScreen::init()
         return false;
     }
     
+    init_background();
     
     init_ui();
     
@@ -60,9 +61,7 @@ bool MainMenuScreen::init()
     
     
     
-//    Background * background = Background::create(world_id);
-//    background->setPosition(window_center);
-//    addChild(background);
+    
     
     
     
@@ -76,6 +75,14 @@ MainMenuScreen::~MainMenuScreen()
     //    sdkbox::PluginShare::removeListener();
     //    sdkbox::IAP::removeListener();
     //    sdkbox::PluginReview::removeListener();
+}
+
+
+void MainMenuScreen::init_background()
+{
+    background_ = Background::create(0);
+    background_->setPosition(Utility::window_center());
+    addChild(background_);
 }
 
 
@@ -100,7 +107,7 @@ void MainMenuScreen::init_ui()
     addChild(btn_coin_);
     
     label_coin_cnt_ = create_label_coin_cnt();
-    label_coin_cnt_->setPosition(cocos2d::Vec2(btn_coin_->getPosition().x+(btn_coin_->getContentSize().width*btn_retry_->getScale()),
+    label_coin_cnt_->setPosition(cocos2d::Vec2(btn_coin_->getPosition().x+(btn_coin_->getContentSize().width*btn_coin_->getScale()),
                                                btn_coin_->getPosition().y));
     addChild(label_coin_cnt_);
     
@@ -246,7 +253,7 @@ cocos2d::ui::Button * MainMenuScreen::create_btn_remove_ads()
 
 cocos2d::Label * MainMenuScreen::create_label_retry_cnt()
 {
-    cocos2d::Label * label_retry_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::retry_count()), FONT_SKRANJI_REG, 16);
+    cocos2d::Label * label_retry_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::retry_count()), FONT_KEN_FUTURE_THIN, 14);
     
     label_retry_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
     label_retry_cnt->setColor(cocos2d::Color3B(192, 177, 170));
@@ -260,7 +267,7 @@ cocos2d::Label * MainMenuScreen::create_label_retry_cnt()
 
 cocos2d::Label * MainMenuScreen::create_label_coin_cnt()
 {
-    cocos2d::Label * label_coin_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::coin_count()), FONT_SKRANJI_REG, 16);
+    cocos2d::Label * label_coin_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::coin_count()), FONT_KEN_FUTURE_THIN, 14);
     
     label_coin_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
     label_coin_cnt->setColor(cocos2d::Color3B(192, 177, 170));

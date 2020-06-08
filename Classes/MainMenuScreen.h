@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include "Background.h"
 //#include "PluginIAP/PluginIAP.h"
 //#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
 //#include "PluginReview/PluginReview.h"
@@ -22,6 +23,7 @@ private:
     ~MainMenuScreen();
     
     void init_ui();
+    void init_background();
     
     cocos2d::ui::ScrollView * create_scrollview(unsigned int items_count);
     
@@ -82,6 +84,7 @@ private:
 //    virtual void onShareState(const sdkbox::SocialShareResponse& response);
 
     
+    Background * background_ = nullptr;
     
 //    cocos2d::ui::Button * btn_help_ = nullptr;
     cocos2d::ui::Button * btn_options_ = nullptr;

@@ -98,7 +98,7 @@ bool GameplayScreen::init()
     
     
     // init background
-//    init_background();
+    init_background();
     
     
     // init physics
@@ -147,7 +147,7 @@ bool GameplayScreen::init()
 
 void GameplayScreen::init_background()
 {
-    background_ = Background::create(level_id_);
+    background_ = Background::create(0);
     background_->setPosition(Utility::window_center());
     
     scene_->addChild(background_);
@@ -396,7 +396,7 @@ void GameplayScreen::init_touch_listener()
 void GameplayScreen::init_cameras()
 {
     // create camera for background
-//    camera_background_ = GameCamera::create(scene_, background_, background_->getPosition(), background_->getContentSize(), cocos2d::CameraFlag::USER2);
+    camera_background_ = GameCamera::create(scene_, background_, background_->getPosition(), background_->getContentSize(), cocos2d::CameraFlag::USER2);
     
     // create camera for playground
 //    camera_playground_ = GameCamera::create(scene_, this, cocos2d::Vec2::ZERO, background_->getContentSize(), cocos2d::CameraFlag::USER1);
@@ -435,7 +435,7 @@ cocos2d::Sprite * GameplayScreen::create_sprite_retry_cnt()
 
 cocos2d::Label * GameplayScreen::create_label_score()
 {
-    cocos2d::Label * label_score = cocos2d::Label::createWithTTF(score_ > 0 ? std::to_string(score_) : "--", FONT_SKRANJI_REG, 16);
+    cocos2d::Label * label_score = cocos2d::Label::createWithTTF(score_ > 0 ? std::to_string(score_) : "--", FONT_KEN_FUTURE_THIN, 16);
     
     label_score->setAnchorPoint(cocos2d::Vec2(0.5, 1.0));
     label_score->setColor(cocos2d::Color3B(187, 252, 254));
@@ -449,7 +449,7 @@ cocos2d::Label * GameplayScreen::create_label_score()
 
 cocos2d::Label * GameplayScreen::create_label_retry_cnt()
 {
-    cocos2d::Label * label_retry_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::retry_count()), FONT_SKRANJI_REG, 16);
+    cocos2d::Label * label_retry_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::retry_count()), FONT_KEN_FUTURE_THIN, 14);
     
     label_retry_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
     label_retry_cnt->setColor(cocos2d::Color3B(192, 177, 170));
