@@ -38,7 +38,7 @@ bool TitleScreen::init()
     addChild(background);
     
     
-    text = cocos2d::Label::createWithTTF("TAP TO PLAY", FONT_SKRANJI_REG, 24);
+    text = cocos2d::Label::createWithTTF("TAP TO PLAY", FONT_KEN_FUTURE_THIN, 24);
     text->setAnchorPoint(cocos2d::Vec2(0.5, 0.0));
     text->enableOutline(cocos2d::Color4B::BLACK, 1);
     text->setPosition(cocos2d::Vec2(Utility::window_center().x, Utility::window_bottom()));
