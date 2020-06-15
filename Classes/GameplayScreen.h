@@ -29,9 +29,10 @@ private:
     
     
     // ACTIONS
+    void init_touch_listener();
     void init_background();
     void init_physics();
-    void init_touch_listener();
+    void init_physics_bounds();
     void init_platforms();
     void init_blocks();
     void init_rope_structures();

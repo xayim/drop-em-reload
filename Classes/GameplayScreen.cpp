@@ -3,6 +3,7 @@
 #include "Audio.h"
 #include "ContactListener.h"
 #include "Definitions.h"
+#include "GLES-Render/GLESRender.h"
 #include "GameplayScreen.h"
 #include "GameSettings.h"
 #include "MainMenuScreen.h"
@@ -187,24 +188,61 @@ void GameplayScreen::init_ui()
 
 void GameplayScreen::init_physics()
 {
+    // create debug draw for PTM_RATIO
+    GLESDebugDraw * debug_draw = new GLESDebugDraw(PTM_RATIO);
+    
+    // setup flags for debut draw
+    uint32 flags = 0;
+    flags += b2Draw::e_shapeBit;
+//    flags += b2Draw::e_jointBit;
+//    flags += b2Draw::e_aabbBit;
+//    flags += b2Draw::e_pairBit;
+//    flags += b2Draw::e_centerOfMassBit;
+    debug_draw->SetFlags(flags);
+    
+    
+    // create world with gravity
     world_ = new b2World(b2Vec2(0, -10));
     world_->SetAutoClearForces(true);
+    world_->SetDebugDraw(debug_draw);
     
-//    GLESDebugDraw * debug_draw = new GLESDebugDraw(PTM_RATIO);
-    
-//    uint32 flags = 0;
-//    flags += b2Draw::e_shapeBit;
-    //    flags += b2Draw::e_jointBit;
-    //    flags += b2Draw::e_aabbBit;
-    //    flags += b2Draw::e_pairBit;
-    //    flags += b2Draw::e_centerOfMassBit;
-    
-//    debug_draw->SetFlags(flags);
-//    world_->SetDebugDraw(debug_draw);
-    
-    
+    // create contact listener
     contact_listener_ = new ContactListener();
+    
+    // set contact listener for b2World
     world_->SetContactListener(contact_listener_);
+    
+    
+    init_physics_bounds();
+}
+
+
+void GameplayScreen::init_physics_bounds()
+{
+    // create world bounds
+    b2Body * world_bound;
+    b2BodyDef bound_def;
+    b2FixtureDef bound_bottom_fixture_def, bound_left_fixture_def, bound_right_fixture_def;
+    b2EdgeShape bound_bottom_shape, bound_left_shape, bound_right_shape;
+    
+    bound_def.position.Set(0, 0);
+    bound_def.type = b2BodyType::b2_staticBody;
+    
+    
+    world_bound = (b2Body *)world_->CreateBody(&bound_def);
+    
+    
+    bound_bottom_shape.Set(b2Vec2(-(PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_WIDTH/2)), b2Vec2((PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_WIDTH/2)));
+    bound_bottom_fixture_def.shape = &bound_bottom_shape;
+    bound_left_shape.Set(b2Vec2(-(PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_WIDTH/2)), b2Vec2(-(PHYSICS_WORLD_WIDTH/2), (PHYSICS_WORLD_WIDTH/2)));
+    bound_left_fixture_def.shape = &bound_left_shape;
+    bound_right_shape.Set(b2Vec2((PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_WIDTH/2)), b2Vec2((PHYSICS_WORLD_WIDTH/2), (PHYSICS_WORLD_WIDTH/2)));
+    bound_right_fixture_def.shape = &bound_right_shape;
+    
+    
+    world_bound->CreateFixture(&bound_bottom_fixture_def);
+    world_bound->CreateFixture(&bound_left_fixture_def);
+    world_bound->CreateFixture(&bound_right_fixture_def);
 }
 
 
@@ -880,7 +918,7 @@ void GameplayScreen::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &tran
 {
     cocos2d::Director::getInstance()->pushMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     
-//    world->DrawDebugData();
+//    world_->DrawDebugData();
     
     
     draw_node->clear();
