@@ -129,7 +129,7 @@ cocos2d::ui::Button * RopeStructure::create_button_hinge(unsigned int tag)
     btn_hinge->setAnchorPoint(cocos2d::Vec2(0.5, 0));
     btn_hinge->setPosition(cocos2d::Vec2(hinge_list.at(tag)->sprite->getPosition().x, hinge_list.at(tag)->sprite->getPosition().y+hinge_list.at(tag)->sprite->getContentSize().height/2*hinge_list.at(tag)->sprite->getScale()));
     
-    btn_hinge->setScale(0.4f, ((2048.f/2)*Utility::scale_vector().x)-btn_hinge->getPosition().y);
+    btn_hinge->setScale(0.4f, ((2048.f/2)*Utility::content_scale())-btn_hinge->getPosition().y);
     btn_hinge->setOpacity(191);
     btn_hinge->setTag(tag);
     btn_hinge->setUserData(this);
