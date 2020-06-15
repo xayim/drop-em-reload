@@ -38,7 +38,7 @@ RopeStructure::RopeStructure(b2World * world, RopeStructureData * object, cocos2
 
 RopeStructure::~RopeStructure()
 {
-    jammer->~Jammer();
+    if (jammer)     jammer->~Jammer();
     delete data_object->jammer_object;
     
     for (unsigned int i = 0; i < hinge_list.size(); ++i)
@@ -66,7 +66,8 @@ void RopeStructure::set_active(bool active)
 
 void RopeStructure::reset()
 {
-    jammer->~Jammer();
+    if (jammer)     jammer->~Jammer();
+    
     jammer = new Jammer(world, data_object->jammer_object, parent);
     
     
@@ -79,6 +80,13 @@ void RopeStructure::reset()
         
         rope_list.push_back(rope);
     }
+}
+
+
+void RopeStructure::destroy_jammer()
+{
+    jammer->~Jammer();
+    jammer = NULL;
 }
 
 
@@ -157,7 +165,7 @@ cocos2d::ui::Button * RopeStructure::create_button_select()
 
 void RopeStructure::update()
 {
-    jammer->update();
+    if (jammer)     jammer->update();
     
     for (unsigned int i = 0; i < rope_list.size(); ++i)
     {
