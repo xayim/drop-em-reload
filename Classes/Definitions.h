@@ -5,7 +5,8 @@
 #define UNLOCK_LEVELS   1
 #define TRANSITION_TIME  0.5
 #define BRIGHT_FACTOR   4
-#define PHYSICS_WORLD_HEIGHT    20
+#define PHYSICS_WORLD_HEIGHT    32.0
+#define PHYSICS_WORLD_WIDTH     ((4.0/3.0)*PHYSICS_WORLD_HEIGHT)
 #define PTM_RATIO           (cocos2d::Director::getInstance()->getWinSize().height/PHYSICS_WORLD_HEIGHT)
 #define GAMEPLAY_HINGE      0
 #define GAMEPLAY_SELECT     1
