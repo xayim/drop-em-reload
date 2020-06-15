@@ -48,6 +48,7 @@ private:
     void open_menu_store();
     void scroll_by(cocos2d::Vec2 delta);
     void remove_rope(RopeStructure * rope_structure, unsigned int rope_index);
+    void check_contacts();
     
     
     // CALLBACKS
@@ -84,9 +85,10 @@ private:
     // PHYSICS
     b2World * world_;
     ContactListener * contact_listener_;
-    std::vector<Enemy *> enemy_list;
-    std::vector<Platform *> platform_list;
-    std::vector<RopeStructure *> rope_structure_list;
+    b2Body * world_bound_;
+    std::vector<Enemy *> enemy_list_;
+    std::vector<Platform *> platform_list_;
+    std::vector<RopeStructure *> rope_structure_list_;
     
     
     // GRAPHICS

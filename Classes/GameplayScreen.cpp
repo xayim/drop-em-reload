@@ -45,18 +45,18 @@ GameplayScreen::~GameplayScreen()
     
     
     // init_platforms
-    for (unsigned int i = 0; i < platform_list.size(); ++i)
-        platform_list.at(i)->~Platform();
+    for (unsigned int i = 0; i < platform_list_.size(); ++i)
+        platform_list_.at(i)->~Platform();
     
     
     // init blocks
-    for (unsigned int i = 0; i < enemy_list.size(); ++i)
-        enemy_list.at(i)->~Enemy();
+    for (unsigned int i = 0; i < enemy_list_.size(); ++i)
+        enemy_list_.at(i)->~Enemy();
     
     
     // init rope structures
-    for (unsigned int i = 0; i < rope_structure_list.size(); ++i)
-        rope_structure_list.at(i)->~RopeStructure();
+    for (unsigned int i = 0; i < rope_structure_list_.size(); ++i)
+        rope_structure_list_.at(i)->~RopeStructure();
     
     
     // init physics
@@ -89,7 +89,9 @@ bool GameplayScreen::init()
     {
         return false;
     }
-    PlayerProfile::set_retry_count(0);
+    
+    PlayerProfile::set_retry_count(5);
+    
     // set sdkbox listener
 //    sdkbox::PluginSdkboxAds::setListener(this);
     
@@ -220,7 +222,6 @@ void GameplayScreen::init_physics()
 void GameplayScreen::init_physics_bounds()
 {
     // create world bounds
-    b2Body * world_bound;
     b2BodyDef bound_def;
     b2FixtureDef bound_bottom_fixture_def, bound_left_fixture_def, bound_right_fixture_def;
     b2EdgeShape bound_bottom_shape, bound_left_shape, bound_right_shape;
@@ -229,20 +230,20 @@ void GameplayScreen::init_physics_bounds()
     bound_def.type = b2BodyType::b2_staticBody;
     
     
-    world_bound = (b2Body *)world_->CreateBody(&bound_def);
+    world_bound_ = (b2Body *)world_->CreateBody(&bound_def);
     
     
-    bound_bottom_shape.Set(b2Vec2(-(PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_WIDTH/2)), b2Vec2((PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_WIDTH/2)));
+    bound_bottom_shape.Set(b2Vec2(-(PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_HEIGHT/2)), b2Vec2((PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_HEIGHT/2)));
     bound_bottom_fixture_def.shape = &bound_bottom_shape;
-    bound_left_shape.Set(b2Vec2(-(PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_WIDTH/2)), b2Vec2(-(PHYSICS_WORLD_WIDTH/2), (PHYSICS_WORLD_WIDTH/2)));
+    bound_left_shape.Set(b2Vec2(-(PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_HEIGHT/2)), b2Vec2(-(PHYSICS_WORLD_WIDTH/2), (PHYSICS_WORLD_HEIGHT/2)));
     bound_left_fixture_def.shape = &bound_left_shape;
-    bound_right_shape.Set(b2Vec2((PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_WIDTH/2)), b2Vec2((PHYSICS_WORLD_WIDTH/2), (PHYSICS_WORLD_WIDTH/2)));
+    bound_right_shape.Set(b2Vec2((PHYSICS_WORLD_WIDTH/2), -(PHYSICS_WORLD_HEIGHT/2)), b2Vec2((PHYSICS_WORLD_WIDTH/2), (PHYSICS_WORLD_HEIGHT/2)));
     bound_right_fixture_def.shape = &bound_right_shape;
     
     
-    world_bound->CreateFixture(&bound_bottom_fixture_def);
-    world_bound->CreateFixture(&bound_left_fixture_def);
-    world_bound->CreateFixture(&bound_right_fixture_def);
+    world_bound_->CreateFixture(&bound_bottom_fixture_def);
+    world_bound_->CreateFixture(&bound_left_fixture_def);
+    world_bound_->CreateFixture(&bound_right_fixture_def);
 }
 
 
@@ -274,7 +275,7 @@ void GameplayScreen::init_platforms()
         
         
         platform = new Platform(world_, platform_object);
-        platform_list.push_back(platform);
+        platform_list_.push_back(platform);
     }
 }
 
@@ -307,7 +308,7 @@ void GameplayScreen::init_blocks()
         
         
         enemy = new Enemy(world_, enemy_object, this);
-        enemy_list.push_back(enemy);
+        enemy_list_.push_back(enemy);
     }
 }
 
@@ -413,7 +414,7 @@ void GameplayScreen::init_rope_structures()
         }
         
         
-        rope_structure_list.push_back(rope_structure);
+        rope_structure_list_.push_back(rope_structure);
     }
 }
 
@@ -914,18 +915,97 @@ void GameplayScreen::remove_rope(RopeStructure *rope_structure, unsigned int rop
 }
 
 
+void GameplayScreen::check_contacts()
+{
+    
+    std::vector<MyContact>::iterator contact_itr;
+    MyContact contact;
+    b2Body *body_a, *body_b;
+    
+    
+    Jammer * jammer;
+    std::vector<RopeStructure *>::iterator rope_structure_itr;
+    std::vector<RopeStructure *> rope_structure_del_list;
+    RopeStructure *rope_structure;
+    std::vector<Platform *>::iterator platform_itr;
+    Platform *platform;
+    std::vector<Enemy *>::iterator enemy_itr;
+    std::vector<Enemy *>::iterator enemy_del_itr;
+    std::vector<Enemy *> enemy_del_list;
+    Enemy *enemy;
+    
+    
+    
+    
+    for (contact_itr = contact_listener_->contacts_.begin(); contact_itr != contact_listener_->contacts_.end(); ++contact_itr)
+    {
+        contact = *contact_itr;
+        
+        body_a = contact.fixtureA->GetBody();
+        body_b = contact.fixtureB->GetBody();
+        
+        
+        for (rope_structure_itr = rope_structure_list_.begin(); rope_structure_itr != rope_structure_list_.end(); ++rope_structure_itr)
+        {
+            rope_structure = *rope_structure_itr;
+            
+            if (rope_structure->jammer)
+            {
+                if ((rope_structure->jammer->body == body_a && world_bound_ == body_b) ||
+                    (world_bound_ == body_a && rope_structure->jammer->body == body_b))
+                {
+                    rope_structure_del_list.push_back(rope_structure);
+                }
+            }
+            
+        }
+        
+        
+        for (enemy_itr = enemy_list_.begin(); enemy_itr != enemy_list_.end(); ++enemy_itr)
+        {
+            enemy = *enemy_itr;
+
+            if ((enemy->body == body_a && world_bound_ == body_b) ||
+                (world_bound_ == body_a && enemy->body == body_b))
+            {
+                enemy_del_list.push_back(enemy);
+            }
+        }
+    }
+    
+    
+    for (rope_structure_itr = rope_structure_del_list.begin(); rope_structure_itr != rope_structure_del_list.end(); ++rope_structure_itr)
+    {
+        rope_structure = *rope_structure_itr;
+        
+        rope_structure->destroy_jammer();
+    }
+    
+    for (enemy_itr = enemy_del_list.begin(); enemy_itr != enemy_del_list.end(); ++enemy_itr)
+    {
+        enemy = *enemy_itr;
+        
+        enemy_del_itr = std::find(enemy_list_.begin(), enemy_list_.end(), enemy);
+        
+        enemy->~Enemy();
+        enemy_list_.erase(enemy_del_itr);
+        
+    }
+}
+
+
 void GameplayScreen::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags)
 {
     cocos2d::Director::getInstance()->pushMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     
-//    world_->DrawDebugData();
+    world_->DrawDebugData();
     
     
     draw_node->clear();
     
-    for (unsigned int i = 0; i < platform_list.size(); ++i)
+    for (unsigned int i = 0; i < platform_list_.size(); ++i)
     {
-        platform_list.at(i)->draw(draw_node);
+        platform_list_.at(i)->draw(draw_node);
     }
     
     
@@ -937,13 +1017,17 @@ void GameplayScreen::update(float deltaTime)
 {
     world_->Step(deltaTime, 60, 60);
 
-    for (unsigned int i = 0; i < enemy_list.size(); ++i)
+    for (unsigned int i = 0; i < enemy_list_.size(); ++i)
     {
-        enemy_list.at(i)->update();
+        enemy_list_.at(i)->update();
     }
     
-    for (unsigned int i = 0; i < rope_structure_list.size(); ++i)
+    for (unsigned int i = 0; i < rope_structure_list_.size(); ++i)
     {
-        rope_structure_list.at(i)->update();
+        rope_structure_list_.at(i)->update();
     }
+    
+    
+    // check for contacts
+    check_contacts();
 }
