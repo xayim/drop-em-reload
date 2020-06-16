@@ -917,24 +917,18 @@ void GameplayScreen::remove_rope(RopeStructure *rope_structure, unsigned int rop
 
 void GameplayScreen::check_contacts()
 {
-    
     std::vector<MyContact>::iterator contact_itr;
     MyContact contact;
     b2Body *body_a, *body_b;
     
-    
-    Jammer * jammer;
-    std::vector<RopeStructure *>::iterator rope_structure_itr;
-    std::vector<RopeStructure *> rope_structure_del_list;
     RopeStructure *rope_structure;
-    std::vector<Platform *>::iterator platform_itr;
-    Platform *platform;
-    std::vector<Enemy *>::iterator enemy_itr;
-    std::vector<Enemy *>::iterator enemy_del_itr;
-    std::vector<Enemy *> enemy_del_list;
+    std::vector<RopeStructure *> rope_structure_del_list;
+    std::vector<RopeStructure *>::iterator rope_structure_itr;
+    
     Enemy *enemy;
-    
-    
+    std::vector<Enemy *> enemy_del_list;
+    std::vector<Enemy *>::iterator enemy_del_itr;
+    std::vector<Enemy *>::iterator enemy_itr;
     
     
     for (contact_itr = contact_listener_->contacts_.begin(); contact_itr != contact_listener_->contacts_.end(); ++contact_itr)
