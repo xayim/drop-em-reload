@@ -29,6 +29,7 @@ public:
     unsigned int remove_rope(unsigned int index);
     cocos2d::ui::Button * create_button_hinge(unsigned int tag);
     cocos2d::ui::Button * create_button_select();
+    cocos2d::ui::Button * create_button_reset();
     RopeStructureData * object() { return data_object; };
     unsigned int rope_count() { return (unsigned int)rope_list.size(); };
     

@@ -66,10 +66,7 @@ void RopeStructure::set_active(bool active)
 
 void RopeStructure::reset()
 {
-    if (jammer)     jammer->~Jammer();
-    
     jammer = new Jammer(world, data_object->jammer_object, parent);
-    
     
     for (unsigned int i = 0; i < data_object->rope_object_list.size(); ++i)
     {
@@ -160,6 +157,23 @@ cocos2d::ui::Button * RopeStructure::create_button_select()
     btn_select->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
     
     return btn_select;
+}
+
+
+cocos2d::ui::Button * RopeStructure::create_button_reset()
+{
+    cocos2d::ui::Button * btn_reset = cocos2d::ui::Button::create("res/ui/btn_retry.png");
+    
+    btn_reset->setColor(cocos2d::Color3B(192, 177, 170));
+    btn_reset->setPosition(cocos2d::Vec2((data_object->hinge_object_list.at(0)->position.x+data_object->hinge_object_list.at(1)->position.x)/2,
+                                         (data_object->hinge_object_list.at(0)->position.y+data_object->hinge_object_list.at(1)->position.y)/2)*PTM_RATIO);
+    
+    btn_reset->setScale(Utility::content_scale());
+    btn_reset->setUserData(this);
+    btn_reset->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
+    btn_reset->runAction(cocos2d::RepeatForever::create(cocos2d::RotateBy::create(.5, 15)));
+    
+    return btn_reset;
 }
 
 
