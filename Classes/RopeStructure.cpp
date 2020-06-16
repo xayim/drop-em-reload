@@ -87,7 +87,7 @@ void RopeStructure::destroy_jammer()
 }
 
 
-unsigned int RopeStructure::remove_rope(unsigned int index)
+void RopeStructure::remove_rope(unsigned int index)
 {
     Rope * rope = rope_list.at(index%rope_list.size());
     
@@ -101,8 +101,6 @@ unsigned int RopeStructure::remove_rope(unsigned int index)
             break;
         }
     }
-    
-    return (unsigned int)rope_list.size();
 }
 
 

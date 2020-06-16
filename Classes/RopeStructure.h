@@ -26,7 +26,7 @@ public:
     void set_active(bool active);
     void reset();
     void destroy_jammer();
-    unsigned int remove_rope(unsigned int index);
+    void remove_rope(unsigned int index);
     cocos2d::ui::Button * create_button_hinge(unsigned int tag);
     cocos2d::ui::Button * create_button_select();
     cocos2d::ui::Button * create_button_reset();
