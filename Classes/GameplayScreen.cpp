@@ -894,24 +894,7 @@ void GameplayScreen::callback_select(Ref *pSender)
 
 void GameplayScreen::remove_rope(RopeStructure *rope_structure, unsigned int rope_index)
 {
-    unsigned int rope_size = rope_structure->remove_rope(rope_index);
-    
-    if (rope_size == 0)
-    {
-        cocos2d::ui::Button * btn_retry = cocos2d::ui::Button::create("res/ui/btn_retry.png");
-        btn_retry->setColor(cocos2d::Color3B(192, 177, 170));
-        btn_retry->setPosition(cocos2d::Vec2((rope_structure->object()->hinge_object_list.at(0)->position.x+rope_structure->object()->hinge_object_list.at(1)->position.x)/2,
-                                             (rope_structure->object()->hinge_object_list.at(0)->position.y+rope_structure->object()->hinge_object_list.at(1)->position.y)/2)*PTM_RATIO);
-//        btn_retry->setPosition(rope_structure->object()->jammer_object->position*PTM_RATIO);
-        btn_retry->setScale(Utility::content_scale());
-        btn_retry->setUserData(rope_structure);
-        btn_retry->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
-        btn_retry->runAction(cocos2d::RepeatForever::create(cocos2d::RotateBy::create(.5, 15)));
-        
-        btn_retry->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_retry, this));
-        
-        addChild(btn_retry);
-    }
+    rope_structure->remove_rope(rope_index);
 }
 
 
@@ -973,6 +956,12 @@ void GameplayScreen::check_contacts()
         rope_structure = *rope_structure_itr;
         
         rope_structure->destroy_jammer();
+        
+        // create a button to reset that rope structure and add it to layer
+        cocos2d::ui::Button * btn_reset = rope_structure->create_button_reset();
+        btn_reset->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_retry, this));
+        
+        addChild(btn_reset);
     }
     
     for (enemy_itr = enemy_del_list.begin(); enemy_itr != enemy_del_list.end(); ++enemy_itr)
