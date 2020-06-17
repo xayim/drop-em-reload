@@ -49,6 +49,9 @@ private:
     void scroll_by(cocos2d::Vec2 delta);
     void remove_rope(RopeStructure * rope_structure, unsigned int rope_index);
     void check_contacts();
+    void add_score(unsigned int score);
+    unsigned int count_jammers();
+    unsigned int count_enemies();
     
     
     // CALLBACKS

@@ -898,6 +898,34 @@ void GameplayScreen::remove_rope(RopeStructure *rope_structure, unsigned int rop
 }
 
 
+void GameplayScreen::add_score(unsigned int score)
+{
+    score_ += score;
+    
+    label_score_->setString(std::to_string(score));
+}
+
+
+unsigned int GameplayScreen::count_jammers()
+{
+    unsigned int count = 0;
+    
+    for (unsigned i = 0; i < rope_structure_list_.size(); ++i)
+    {
+        if (rope_structure_list_.at(i)->jammer)     ++count;
+    }
+    
+    
+    return count;
+}
+
+
+unsigned int GameplayScreen::count_enemies()
+{
+    return (unsigned int)enemy_list_.size();
+}
+
+
 void GameplayScreen::check_contacts()
 {
     std::vector<MyContact>::iterator contact_itr;
@@ -973,6 +1001,9 @@ void GameplayScreen::check_contacts()
         enemy->~Enemy();
         enemy_list_.erase(enemy_del_itr);
         
+        
+        // add score on destroying enemy
+        add_score(10);
     }
 }
 
@@ -1013,4 +1044,7 @@ void GameplayScreen::update(float deltaTime)
     
     // check for contacts
     check_contacts();
+    
+    if (count_enemies() == 0)   open_menu_game_win();
+    if (count_jammers() == 0)   open_menu_game_lose();
 }
