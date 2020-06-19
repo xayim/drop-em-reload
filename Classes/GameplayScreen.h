@@ -13,6 +13,7 @@
 #include "RopeStructure.h"
 
 
+
 class GameplayScreen : public cocos2d::Layer/*, public sdkbox::PluginSdkboxAdsListener*/
 {
 public:
@@ -24,7 +25,7 @@ private:
     CREATE_FUNC(GameplayScreen);
     
     virtual bool init();
-    virtual void update(float deltaTime);
+    virtual void update(float delta_time);
     virtual void draw(cocos2d::Renderer *renderer, const cocos2d::Mat4& transform, uint32_t flags);
     
     
@@ -39,6 +40,7 @@ private:
     void init_ui();
     void init_cameras();
     cocos2d::ui::Button * create_btn_pause();
+    cocos2d::ui::Button * create_btn_resume();
     cocos2d::Sprite * create_sprite_retry_cnt();
     cocos2d::Label * create_label_score();
     cocos2d::Label * create_label_retry_cnt();
@@ -52,6 +54,7 @@ private:
     void add_score(unsigned int score);
     unsigned int count_jammers();
     unsigned int count_enemies();
+    void update_game_state();
     
     
     // CALLBACKS
@@ -81,6 +84,8 @@ private:
     Node * ui_;
     rapidjson::Document level_document;
     unsigned int score_;
+    bool flag_gamepause;
+    bool flag_gameover;
 //    unsigned int retry_count_;
 //    unsigned int coin_count_;
     
@@ -99,7 +104,8 @@ private:
     cocos2d::Label * label_score_;
     cocos2d::Label * label_retry_cnt_;
     cocos2d::ui::Button * btn_pause_;
-    cocos2d::Sprite * btn_retry_;
+    cocos2d::ui::Button * btn_resume_;
+    cocos2d::Sprite * icon_retry_;
     cocos2d::DrawNode * draw_node;
     
     
