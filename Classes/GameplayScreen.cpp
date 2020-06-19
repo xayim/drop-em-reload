@@ -611,6 +611,12 @@ void GameplayScreen::open_menu_pause()
     btn_restart->setPosition(cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y));
     btn_restart->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_restart, this));
     panel->addChild(btn_restart);
+    
+    
+    cocos2d::ui::Button * btn_store = cocos2d::ui::Button::create("res/ui/btn_store.png");
+    btn_store->setPosition(cocos2d::Vec2(btn_store->getContentSize().width*1.5, panel_bg->getPosition().y));
+    btn_store->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_store, this));
+    panel->addChild(btn_store);
 }
 
 
@@ -893,6 +899,12 @@ void GameplayScreen::callback_select(Ref *pSender)
         
         rope_structure_active = rope_structure;
     }
+}
+
+
+void GameplayScreen::callback_store(Ref *pSender)
+{
+    
 }
 
 

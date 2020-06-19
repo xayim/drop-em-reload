@@ -67,6 +67,7 @@ private:
     void callback_advance(Ref * pSender);
     void callback_hinge(Ref *pSender);
     void callback_select(Ref *pSender);
+    void callback_store(Ref *pSender);
     bool on_touch_began(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     void on_touch_moved(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     void on_touch_ended(cocos2d::Touch *touch, cocos2d::Event *unused_event);
