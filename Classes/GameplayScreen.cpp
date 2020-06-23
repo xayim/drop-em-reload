@@ -981,7 +981,7 @@ void GameplayScreen::update_game_state()
         
         flag_gameover = true;
     }
-    else if (count_jammers() == 0)
+    else if (count_jammers() == 0 && PlayerProfile::retry_count() == 0)
     {
         icon_retry_->removeFromParent();
         
@@ -1124,11 +1124,12 @@ void GameplayScreen::update(float delta_time)
         
         // check for contacts
         check_contacts();
-    }
-    
-    if (!flag_gameover)
-    {
-        // update game state
-        update_game_state();
+        
+        
+        if (!flag_gameover)
+        {
+            // update game state
+            update_game_state();
+        }
     }
 }
