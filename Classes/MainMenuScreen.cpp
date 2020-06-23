@@ -40,8 +40,8 @@ bool MainMenuScreen::init()
 //    sdkbox::PluginSdkboxAds::setListener(this);
     
     
-//    sdkbox::PluginReview::setListener(this);
-//    sdkbox::PluginReview::show();
+    sdkbox::PluginReview::setListener(this);
+    sdkbox::PluginReview::show();
     
     
     
@@ -462,28 +462,28 @@ void MainMenuScreen::callback_remove_ads(cocos2d::Ref *pSender)
 
 
 // sdkbox review listener callbacks
-//void MainMenuScreen::onDisplayAlert()
-//{
-//
-//}
-//
-//
-//void MainMenuScreen::onDeclineToRate()
-//{
-//
-//}
-//
-//
-//void MainMenuScreen::onRate()
-//{
-//
-//}
-//
-//
-//void MainMenuScreen::onRemindLater()
-//{
-//
-//}
+void MainMenuScreen::onDisplayAlert()
+{
+
+}
+
+
+void MainMenuScreen::onDeclineToRate()
+{
+
+}
+
+
+void MainMenuScreen::onRate()
+{
+
+}
+
+
+void MainMenuScreen::onRemindLater()
+{
+
+}
 
 
 // sdkbox share listener callbacks

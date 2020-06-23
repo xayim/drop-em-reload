@@ -30,6 +30,9 @@
 //#ifdef SDKBOX_ENABLED
 //#include "PluginShare/PluginShare.h"
 //#endif
+#ifdef SDKBOX_ENABLED
+#include "PluginReview/PluginReview.h"
+#endif
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -90,6 +93,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 //#ifdef SDKBOX_ENABLED
 //    sdkbox::PluginShare::init();
 //#endif
+#ifdef SDKBOX_ENABLED
+    sdkbox::PluginReview::init();
+#endif
+
     
     // initialize director
     auto director = Director::getInstance();

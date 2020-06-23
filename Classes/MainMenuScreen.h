@@ -7,12 +7,12 @@
 #include "Background.h"
 //#include "PluginIAP/PluginIAP.h"
 //#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
-//#include "PluginReview/PluginReview.h"
+#include "PluginReview/PluginReview.h"
 //#include "PluginShare/PluginShare.h"
 
 
 
-class MainMenuScreen : public cocos2d::Layer/*, public sdkbox::PluginSdkboxAdsListener*/
+class MainMenuScreen : public cocos2d::Layer, public sdkbox::ReviewListener /*, public sdkbox::PluginSdkboxAdsListener*/
 {
 public:
     static cocos2d::Scene * create_scene();
@@ -73,10 +73,10 @@ private:
     
     
     // sdkbox review listener callbacks
-//    virtual void onDisplayAlert();
-//    virtual void onDeclineToRate();
-//    virtual void onRate();
-//    virtual void onRemindLater();
+    virtual void onDisplayAlert();
+    virtual void onDeclineToRate();
+    virtual void onRate();
+    virtual void onRemindLater();
     
     
     
