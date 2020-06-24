@@ -15,6 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+#admob
+-keep class com.google.ads.** { *; }
+-dontwarn com.google.ads.**
+#sdkbox
+-keep class com.sdkbox.** { *; }
+-dontwarn com.sdkbox.**
 # unityads
 # Keep filenames and line numbers for stack traces
 -keepattributes SourceFile,LineNumberTable
