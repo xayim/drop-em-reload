@@ -5,6 +5,7 @@
 #include "GameSettings.h"
 #include "HelpScreen.h"
 #include "MainMenuScreen.h"
+#include "PlayerProfile.h"
 #include "Utility.h"
 //#include "WorldSelectScreen.h"
 
@@ -21,6 +22,7 @@ cocos2d::Scene * SettingsScreen::create_scene()
 
 bool SettingsScreen::init()
 {
+    sdkbox::PluginSdkboxAds::setListener(this);
 //    cocos2d::Size window_size = cocos2d::Director::getInstance()->getVisibleSize();
 //    float scale = 1-(1/cocos2d::Director::getInstance()->getContentScaleFactor());
 //    cocos2d::Vec2 window_center = Utility::window_center();
@@ -273,4 +275,23 @@ void SettingsScreen::layout_buttons()
     btn_help_->setPosition(cocos2d::Vec2(window_center.x+btn_help_->getContentSize().width*3, window_center.y));
     btn_help_->addClickEventListener(CC_CALLBACK_1(SettingsScreen::callback_help, this));
     addChild(btn_help_);
+}
+
+
+void SettingsScreen::onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type)
+{
+    if (!PlayerProfile::ads_enabled())
+        return;
+
+
+    if (zone == "banner" && action_type == sdkbox::AdActionType::LOADED)
+    {
+        sdkbox::PluginSdkboxAds::placement("placement-banner");
+    }
+}
+
+
+void SettingsScreen::onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed)
+{
+    
 }

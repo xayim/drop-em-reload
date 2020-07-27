@@ -93,7 +93,7 @@ bool GameplayScreen::init()
     PlayerProfile::set_retry_count(5);
     
     // set sdkbox listener
-//    sdkbox::PluginSdkboxAds::setListener(this);
+    sdkbox::PluginSdkboxAds::setListener(this);
     
     
     // read level file
@@ -736,8 +736,8 @@ void GameplayScreen::callback_pause(cocos2d::Ref *pSender)
     ui_->addChild(btn_resume_);
     
     
-//    if (PlayerProfile::ads_enabled())
-//        sdkbox::PluginSdkboxAds::placement("placement-interstitial");
+    if (PlayerProfile::ads_enabled())
+        sdkbox::PluginSdkboxAds::placement("placement-interstitial");
     
     
     open_menu_pause();
@@ -799,7 +799,7 @@ void GameplayScreen::callback_retry(cocos2d::Ref *pSender)
 
 void GameplayScreen::callback_get_retry(cocos2d::Ref *pSender)
 {
-//    sdkbox::PluginSdkboxAds::placement("placement-reward");
+    sdkbox::PluginSdkboxAds::placement("placement-reward");
 }
 
 
@@ -909,24 +909,24 @@ void GameplayScreen::callback_store(Ref *pSender)
 
 
 //sdkbox ads listener callbacks
-//void GameplayScreen::onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type)
-//{
-//    if (ad_unit_id == "UnityAds" && zone == "reward" && action_type == sdkbox::AdActionType::AD_ENDED)
-//    {
-//        PlayerProfile::set_retry_count(PlayerProfile::retry_count()+RETRY_REWARD);
-//        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
-//    }
-//}
+void GameplayScreen::onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type)
+{
+    if (ad_unit_id == "UnityAds" && zone == "reward" && action_type == sdkbox::AdActionType::AD_ENDED)
+    {
+        PlayerProfile::set_retry_count(PlayerProfile::retry_count()+RETRY_REWARD);
+        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
+    }
+}
 
 
-//void GameplayScreen::onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed)
-//{
-//    if (reward_succeed)
-//    {
-//        PlayerProfile::set_retry_count(PlayerProfile::retry_count()+RETRY_REWARD);
-//        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
-//    }
-//}
+void GameplayScreen::onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed)
+{
+    if (reward_succeed)
+    {
+        PlayerProfile::set_retry_count(PlayerProfile::retry_count()+RETRY_REWARD);
+        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
+    }
+}
 
 
 void GameplayScreen::remove_rope(RopeStructure *rope_structure, unsigned int rope_index)

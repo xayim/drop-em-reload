@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "external/json/document.h"
-//#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
+#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
 #include "Background.h"
 #include "ContactListener.h"
 #include "Enemy.h"
@@ -14,7 +14,7 @@
 
 
 
-class GameplayScreen : public cocos2d::Layer/*, public sdkbox::PluginSdkboxAdsListener*/
+class GameplayScreen : public cocos2d::Layer, public sdkbox::PluginSdkboxAdsListener
 {
 public:
     static cocos2d::Scene * create_scene(unsigned int level_id);
@@ -73,8 +73,8 @@ private:
     void on_touch_ended(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     
     // sdkbox ads listener callbacks
-//    virtual void onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type);
-//    virtual void onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed);
+    virtual void onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type);
+    virtual void onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed);
     
     
     // GAME

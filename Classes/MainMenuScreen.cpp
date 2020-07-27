@@ -37,13 +37,10 @@ bool MainMenuScreen::init()
 //    sdkbox::IAP::setListener(this);
 //    sdkbox::IAP::refresh();
     
-//    sdkbox::PluginSdkboxAds::setListener(this);
-    
+    sdkbox::PluginSdkboxAds::setListener(this);
     
     sdkbox::PluginReview::setListener(this);
     sdkbox::PluginReview::show();
-    
-    
     
     
 //    sdkbox::SocialShareInfo share_info;
@@ -59,22 +56,17 @@ bool MainMenuScreen::init()
 //    sdkbox::PluginShare::share(share_info);
     
     
-    
-    
-    
-    
-    
-    
     return true;
 }
 
 
 MainMenuScreen::~MainMenuScreen()
 {
-    //    sdkbox::PluginSdkboxAds::hide("placement-banner");
-    //    sdkbox::PluginShare::removeListener();
-    //    sdkbox::IAP::removeListener();
-    //    sdkbox::PluginReview::removeListener();
+//    sdkbox::PluginSdkboxAds::hide("placement-banner");
+//    sdkbox::PluginSdkboxAds::setListener(NULL);
+//    sdkbox::PluginShare::removeListener();
+//    sdkbox::IAP::removeListener();
+    sdkbox::PluginReview::removeListener();
 }
 
 
@@ -299,7 +291,7 @@ void MainMenuScreen::callback_select_level(Ref *pSender)
     
     GameSettings::set_scroll_percentage(scrollview_->getScrolledPercentHorizontal());
     
-//    sdkbox::PluginSdkboxAds::hide("placement-banner");
+    sdkbox::PluginSdkboxAds::hide("placement-banner");
     
     cocos2d::Scene * scene = GameplayScreen::create_scene(button->getTag());
     cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, scene));
@@ -386,29 +378,29 @@ void MainMenuScreen::callback_remove_ads(cocos2d::Ref *pSender)
 
 
 //sdkbox ads listener callbacks
-//void MainMenuScreen::onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type)
-//{
-//    if (!PlayerProfile::ads_enabled())
-//        return;
-//
-//
-//    if (zone == "banner" && action_type == sdkbox::AdActionType::LOADED)
-//    {
-//        sdkbox::PluginSdkboxAds::placement("placement-banner");
-//    }
-//
-////    if (!placement_interstitial_done && zone == "interstitial" && action_type == sdkbox::AdActionType::LOADED)
-////    {
-////        sdkbox::PluginSdkboxAds::placement("placement-interstitial");
-////        placement_interstitial_done = true;
-////    }
-//}
+void MainMenuScreen::onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type)
+{
+    if (!PlayerProfile::ads_enabled())
+        return;
 
 
-//void MainMenuScreen::onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed)
-//{
-//
-//}
+    if (zone == "banner" && action_type == sdkbox::AdActionType::LOADED)
+    {
+        sdkbox::PluginSdkboxAds::placement("placement-banner");
+    }
+
+    if (!placement_interstitial_done && zone == "interstitial" && action_type == sdkbox::AdActionType::LOADED)
+    {
+        sdkbox::PluginSdkboxAds::placement("placement-interstitial");
+        placement_interstitial_done = true;
+    }
+}
+
+
+void MainMenuScreen::onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed)
+{
+
+}
 
 
 // sdkbox admob listener callbacks

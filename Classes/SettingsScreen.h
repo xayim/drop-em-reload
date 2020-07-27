@@ -3,9 +3,10 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
 
 
-class SettingsScreen : public cocos2d::Layer
+class SettingsScreen : public cocos2d::Layer, public sdkbox::PluginSdkboxAdsListener
 {
 public:
     static cocos2d::Scene * create_scene();
@@ -26,6 +27,12 @@ private:
     void callback_help(cocos2d::Ref *pSender);
     
     void layout_buttons();
+    
+    
+    // sdkbox ads listener callbacks
+    virtual void onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type);
+    virtual void onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed);
+    
     
     cocos2d::ui::Button * btn_back_ = nullptr;
     cocos2d::ui::Button * btn_sfx_ = nullptr;

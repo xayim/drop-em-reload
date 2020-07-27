@@ -6,13 +6,13 @@
 #include "ui/CocosGUI.h"
 #include "Background.h"
 //#include "PluginIAP/PluginIAP.h"
-//#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
+#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
 #include "PluginReview/PluginReview.h"
 //#include "PluginShare/PluginShare.h"
 
 
 
-class MainMenuScreen : public cocos2d::Layer, public sdkbox::ReviewListener /*, public sdkbox::PluginSdkboxAdsListener*/
+class MainMenuScreen : public cocos2d::Layer, public sdkbox::ReviewListener, public sdkbox::PluginSdkboxAdsListener
 {
 public:
     static cocos2d::Scene * create_scene();
@@ -56,8 +56,8 @@ private:
     
     
     // sdkbox ads listener callbacks
-//    virtual void onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type);
-//    virtual void onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed);
+    virtual void onAdAction( const std::string& ad_unit_id, const std::string& zone, sdkbox::AdActionType action_type);
+    virtual void onRewardAction( const std::string& ad_unit_id, const std::string& zone_id, float reward_amount, bool reward_succeed);
     
     // sdkbox admob listener callbacks
 //    virtual void adViewDidReceiveAd(const std::string &name);
