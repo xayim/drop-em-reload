@@ -24,9 +24,9 @@
 
 #include "AppDelegate.h"
 #include "TitleScreen.h"
-//#ifdef SDKBOX_ENABLED
-//#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
-//#endif
+#ifdef SDKBOX_ENABLED
+#include "PluginSdkBoxAds/PluginSdkBoxAds.h"
+#endif
 //#ifdef SDKBOX_ENABLED
 //#include "PluginShare/PluginShare.h"
 //#endif
@@ -87,9 +87,9 @@ static int register_all_packages()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
-//#ifdef SDKBOX_ENABLED
-//    sdkbox::PluginSdkboxAds::init();
-//#endif
+#ifdef SDKBOX_ENABLED
+    sdkbox::PluginSdkboxAds::init();
+#endif
 //#ifdef SDKBOX_ENABLED
 //    sdkbox::PluginShare::init();
 //#endif
