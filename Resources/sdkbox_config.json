@@ -183,152 +183,93 @@
             "ads": {
                 "banner": {
                     "type": "banner", 
-                    "placement": "banner"
+                    "placement": "placement-banner"
+                },
+                "interstitial": {
+                    "type": "interstitial",
+                    "placement": "placement-interstitial"
+                },
+                "reward": {
+                    "type": "rewarded_video",
+                    "placement": "placement-reward"
                 }
             }
         }, 
         "SdkboxAds": {
             "debug": true, 
             "units": [
-                "AdColony", 
-                "Fyber", 
-                "Chartboost", 
-                "AdMob", 
-                "Appnext", 
+                "AdMob",
                 "UnityAds"
             ], 
             "placements": [
                 {
                     "units": [
                         {
-                            "weight": 30, 
-                            "name": "video", 
-                            "unit": "AdColony"
-                        }, 
-                        {
-                            "weight": 20, 
-                            "name": "Default", 
-                            "unit": "Chartboost"
-                        }
-                    ], 
-                    "id": "placement-1", 
-                    "strategy": "weight"
-                }, 
-                {
-                    "units": [
-                        {
-                            "name": "v4vc", 
-                            "unit": "AdColony"
-                        }, 
-                        {
-                            "name": "Level Complete", 
-                            "unit": "Chartboost"
-                        }
-                    ], 
-                    "id": "placement-2", 
-                    "strategy": "round-robin"
-                }, 
-                {
-                    "units": [
-                        {
-                            "name": "gameover", 
+                            "name": "banner",
                             "unit": "AdMob"
-                        }
-                    ], 
-                    "id": "placement-admob", 
-                    "strategy": "round-robin"
-                }, 
-                {
-                    "units": [
+                        }, 
                         {
-                            "name": "video", 
+                            "name": "banner",
                             "unit": "UnityAds"
                         }
                     ], 
-                    "id": "placement-unity", 
+                    "id": "placement-banner",
+                    "strategy": "round-robin"
+                }, 
+                {
+                    "units": [
+                        {
+                            "name": "interstitial",
+                            "unit": "AdMob"
+                        },
+                        {
+                            "name": "interstitial",
+                            "unit": "UnityAds"
+                        }
+                    ], 
+                    "id": "placement-interstitial",
+                    "strategy": "round-robin"
+                }, 
+                {
+                    "units": [
+                        {
+                            "name": "reward",
+                            "unit": "AdMob"
+                        },
+                        {
+                            "name": "reward",
+                            "unit": "UnityAds"
+                        }
+                    ], 
+                    "id": "placement-reward",
                     "strategy": "round-robin"
                 }
             ]
-        }, 
-        "AdColony": {
-            "id": "appbdee68ae27024084bb334a", 
-            "ads": {
-                "v4vc": {
-                    "v4vc": true, 
-                    "pre_popup": true, 
-                    "zone": "vzf8e4e97704c4445c87504e", 
-                    "post_popup": true
-                }, 
-                "video": {
-                    "v4vc": false, 
-                    "zone": "vzf8fb4670a60e4a139d01b5"
-                }
-            }
-        }, 
-        "Appnext": {
-            "debug": true, 
-            "ads": {
-                "default": {
-                    "cache": true, 
-                    "type": "interstitial", 
-                    "id": "6d596bc5-b4c1-48ca-be95-3758fd29a3a5"
-                }
-            }
-        }, 
+        },
         "AdMob": {
             "testdevice": "kGADSimulatorID", 
             "test": false, 
             "safearea": true, 
             "ads": {
-                "next_level": {
+                "banner": {
+                    "width": 300,
+                    "type": "banner",
+                    "id": "ca-app-pub-3940256099942544/2934735716",
+                    "alignment": "bottom",
+                    "height": 50
+                },
+                "interstitial": {
                     "type": "interstitial", 
                     "id": "ca-app-pub-1329374026572143/9390403312"
                 }, 
-                "rewarded2": {
+                "reward": {
                     "type": "rewarded_video", 
                     "id": "ca-app-pub-3940256099942544/1712485313"
-                }, 
-                "gameover": {
-                    "type": "interstitial", 
-                    "id": "ca-app-pub-1329374026572143/4185543717"
-                }, 
-                "home": {
-                    "width": 300, 
-                    "type": "banner", 
-                    "id": "ca-app-pub-3940256099942544/2934735716", 
-                    "alignment": "bottom", 
-                    "height": 50
-                }, 
-                "rewarded": {
-                    "type": "rewarded_video", 
-                    "id": "ca-app-pub-1329374026572143/7991602916"
-                }, 
-                "top_banner": {
-                    "type": "banner", 
-                    "id": "ca-app-pub-1329374026572143/6690628914", 
-                    "alignment": "top"
                 }
+                
             }, 
             "appid": "ca-app-pub-1329374026572143~2708810518"
-        }, 
-        "Appodeal": {
-            "app_key": "2cfc9cc638980eb7f5ff35d6eb63dbe404503151ccc451ed"
-        }, 
-        "Chartboost": {
-            "id": "4f21c409cd1cb2fb7000001b", 
-            "ads": {
-                "Default": {
-                    "type": "interstitial"
-                }, 
-                "Level Complete": {
-                    "type": "rewarded_video"
-                }, 
-                "MoreApp": {
-                    "type": "more_app"
-                }
-            }, 
-            "signature": "92e2de2fd7070327bdeb54c15a5295309c6fcd2d"
-        }, 
+        },
         "Review": {
             "LaunchLimit": 3, 
             "DayForReminding": 1, 
