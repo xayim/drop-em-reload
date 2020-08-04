@@ -3,6 +3,7 @@
 #include "Definitions.h"
 #include "GameSettings.h"
 #include "MainMenuScreen.h"
+#include "UIComponentUtility.h"
 #include "Utility.h"
 
 
@@ -31,6 +32,9 @@ bool TitleScreen::init()
     
     Audio::initialise();
     
+    timer = 0;
+    touch_began = false;
+    
     
     cocos2d::Sprite * background = cocos2d::Sprite::create("res/title_screen_background.png");
     background->setPosition(Utility::window_center());
@@ -38,11 +42,17 @@ bool TitleScreen::init()
     addChild(background);
     
     
-    text = cocos2d::Label::createWithTTF("TAP TO PLAY", FONT_KEN_FUTURE_THIN, 24);
-    text->setAnchorPoint(cocos2d::Vec2(0.5, 0.0));
+    
+    text = UIComponentUtility::create_ui_label("TAP TO PLAY",
+                                               FONT_KEN_FUTURE_THIN,
+                                               24,
+                                               cocos2d::Vec2(0.5, 0.0),
+                                               cocos2d::Vec2(Utility::window_center().x, Utility::ui_bottom()),
+                                               cocos2d::Color3B::WHITE);
+    
     text->enableOutline(cocos2d::Color4B::BLACK, 1);
-    text->setPosition(cocos2d::Vec2(Utility::window_center().x, Utility::window_bottom()));
     addChild(text);
+    
     
     
     cocos2d::EventListenerTouchOneByOne * touch_listener = cocos2d::EventListenerTouchOneByOne::create();
@@ -52,11 +62,8 @@ bool TitleScreen::init()
     cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touch_listener, this);
  
     
+    
     Audio::instance()->play_music_menu_background();
-    
-    
-    timer = 0;
-    touch_began = false;
     
     
     GameSettings::set_scroll_percentage(0.f);

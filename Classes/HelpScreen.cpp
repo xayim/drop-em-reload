@@ -2,6 +2,7 @@
 #include "Audio.h"
 #include "Definitions.h"
 #include "MainMenuScreen.h"
+#include "UIComponentUtility.h"
 #include "Utility.h"
 
 
@@ -18,10 +19,11 @@ cocos2d::Scene * HelpScreen::create_scene()
 
 bool HelpScreen::init()
 {
-    btn_home = cocos2d::ui::Button::create("res/ui/btn_home.png");
-    btn_home->setScale(Utility::content_scale());
-    btn_home->setAnchorPoint(cocos2d::Vec2(1.0, 1.0));
-    btn_home->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()));
+    btn_home = UIComponentUtility::create_ui_button("res/ui/btn_home.png",
+                                                    cocos2d::Vec2(1.0, 1.0),
+                                                    cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()),
+                                                    Utility::content_scale());
+    
     btn_home->addClickEventListener(CC_CALLBACK_1(HelpScreen::callback_home, this));
     addChild(btn_home);
     
