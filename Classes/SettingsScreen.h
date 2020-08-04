@@ -23,7 +23,7 @@ private:
     void callback_gameplay(cocos2d::Ref *pSender);
     void callback_gameplay_hinge(cocos2d::Ref *pSender);
     void callback_gameplay_select(cocos2d::Ref *pSender);
-    void callback_store(cocos2d::Ref *pSender);
+//    void callback_store(cocos2d::Ref *pSender);
     void callback_help(cocos2d::Ref *pSender);
     
     void layout_buttons();
@@ -38,7 +38,7 @@ private:
     cocos2d::ui::Button * btn_sfx_ = nullptr;
     cocos2d::ui::Button * btn_music_ = nullptr;
     cocos2d::ui::Button * btn_gameplay_ = nullptr;
-    cocos2d::ui::Button * btn_store_ = nullptr;
+//    cocos2d::ui::Button * btn_store_ = nullptr;
     cocos2d::ui::Button * btn_help_ = nullptr;
     cocos2d::Node * panel_ = nullptr;
 };
