@@ -33,8 +33,23 @@ bool Background::init()
     return true;
 }
 
+
 Background::~Background()
 {
 //    background_0_->removeFromParent();
 //    background_1_->removeFromParent();
+}
+
+
+void Background::dim()
+{
+    background_0_->setOpacity(127.0);
+    background_1_->setOpacity(127.0);
+}
+
+
+void Background::bright()
+{
+    background_0_->setOpacity(255.0);
+    background_1_->setOpacity(255.0);
 }

@@ -10,6 +10,8 @@ class Background : public cocos2d::Node
 {
 public:
     static Background * create(unsigned int level_id);
+    void dim();
+    void bright();
 
 private:
     ~Background();
