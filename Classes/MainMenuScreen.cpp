@@ -7,6 +7,7 @@
 #include "PlayerProfile.h"
 #include "SettingsScreen.h"
 #include "TitleScreen.h"
+#include "UIComponentUtility.h"
 #include "Utility.h"
 
 
@@ -80,40 +81,93 @@ void MainMenuScreen::init_background()
 
 void MainMenuScreen::init_ui()
 {
-    scrollview_ = create_scrollview(Utility::file_count("level_data"));
+    unsigned int level_count = Utility::file_count("level_data");
+    
+    
+    // create menu label
+    label_menu_ = UIComponentUtility::create_ui_label("Select Level",
+                                                      FONT_KEN_FUTURE_THIN,
+                                                      24,
+                                                      cocos2d::Vec2(0.5, 1.0),
+                                                      cocos2d::Vec2(Utility::window_center().x, Utility::ui_top()),
+                                                      cocos2d::Color3B::WHITE);
+    
+    label_menu_->enableOutline(cocos2d::Color4B::BLACK, 1);
+    addChild(label_menu_);
+    
+    
+    // create scrollview of levels
+    scrollview_ = create_scrollview(level_count);
     addChild(scrollview_);
     
     
-    btn_retry_ = create_sprite_retry_cnt();
-    btn_retry_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_top()));
-    addChild(btn_retry_);
     
-    label_retry_cnt_ = create_label_retry_cnt();
-    label_retry_cnt_->setPosition(cocos2d::Vec2(btn_retry_->getPosition().x+(btn_retry_->getContentSize().width*btn_retry_->getScale()),
-                                                btn_retry_->getPosition().y-(btn_retry_->getContentSize().height*btn_retry_->getScale())));
-    addChild(label_retry_cnt_);
-    
-    
-    btn_coin_ = create_sprite_coin_cnt();
-    btn_coin_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_bottom()));
-    addChild(btn_coin_);
-    
-    label_coin_cnt_ = create_label_coin_cnt();
-    label_coin_cnt_->setPosition(cocos2d::Vec2(btn_coin_->getPosition().x+(btn_coin_->getContentSize().width*btn_coin_->getScale()),
-                                               btn_coin_->getPosition().y));
-    addChild(label_coin_cnt_);
+    // create icon retry
+//    btn_retry_ = cocos2d::Sprite::create("res/ui/btn_retry_2.png");
+//
+//    btn_retry_->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
+//    btn_retry_->setScale(Utility::content_scale());
+//    btn_retry_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_top()));
+//    addChild(btn_retry_);
     
     
-    btn_options_ = create_btn_options();
-    btn_options_->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()));
+    // create label retry count
+//    label_retry_cnt_ = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::retry_count()),
+//                                                          FONT_KEN_FUTURE_THIN,
+//                                                          14,
+//                                                          cocos2d::Vec2(0.0, 0.0),
+//                                                          cocos2d::Color3B(192, 177, 170));
+//    
+//    label_retry_cnt_->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    label_retry_cnt_->setPosition(cocos2d::Vec2(btn_retry_->getPosition().x+(btn_retry_->getContentSize().width*btn_retry_->getScale()),
+//                                                btn_retry_->getPosition().y-(btn_retry_->getContentSize().height*btn_retry_->getScale())));
+//    addChild(label_retry_cnt_);
+    
+    
+    // create icon coin
+//    icon_coin_ = cocos2d::Sprite::create("res/ui/icon_coin.png");
+//    icon_coin_->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
+//    icon_coin_->setScale(Utility::content_scale());
+//    icon_coin_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_bottom()));
+//    addChild(icon_coin_);
+//
+//
+//
+//    // create label coin count
+//    label_coin_cnt_ = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::coin_count()),
+//                                                          FONT_KEN_FUTURE_THIN,
+//                                                          14,
+//                                                          cocos2d::Vec2(0.0, 0.0),
+//                                                          cocos2d::Color3B(192, 177, 170));
+//
+//    label_coin_cnt_->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    label_coin_cnt_->setPosition(cocos2d::Vec2(icon_coin_->getPosition().x+(icon_coin_->getContentSize().width*icon_coin_->getScale()),
+//                                               icon_coin_->getPosition().y));
+//    addChild(label_coin_cnt_);
+    
+    
+    
+    // create button options
+    btn_options_ = UIComponentUtility::create_ui_button("res/ui/btn_menu.png",
+                                                        cocos2d::Vec2(1.0, 1.0),
+                                                        cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()),
+                                                        Utility::content_scale());
+    
+    btn_options_->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_options, this));
     addChild(btn_options_);
     
     
+    
+    // create button to remove ads if ads are enabled
     if (PlayerProfile::ads_enabled())
     {
-        btn_remove_ads = create_btn_remove_ads();
-        btn_remove_ads->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_bottom()));
-        addChild(btn_remove_ads);
+        btn_remove_ads_ = UIComponentUtility::create_ui_button("res/ui/icon_block_ads.png",
+                                                               cocos2d::Vec2(1.0, 0.0),
+                                                               cocos2d::Vec2(Utility::ui_right(), Utility::ui_bottom()),
+                                                               Utility::content_scale());
+        
+        btn_remove_ads_->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_remove_ads, this));
+        addChild(btn_remove_ads_);
     }
 }
 
@@ -191,84 +245,63 @@ cocos2d::ui::ScrollView * MainMenuScreen::create_scrollview(unsigned int items_c
 }
 
 
-cocos2d::Sprite * MainMenuScreen::create_sprite_retry_cnt()
-{
-    cocos2d::Sprite * spr_retry = cocos2d::Sprite::create("res/ui/btn_retry_2.png");
-    
-    spr_retry->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
-    spr_retry->setScale(Utility::content_scale());
-//    btn_retry->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_get_retry, this));
-    
-    
-    return spr_retry;
-}
+//cocos2d::Sprite * MainMenuScreen::create_sprite_retry_cnt()
+//{
+//    cocos2d::Sprite * spr_retry = cocos2d::Sprite::create("res/ui/btn_retry_2.png");
+//
+//    spr_retry->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
+//    spr_retry->setScale(Utility::content_scale());
+////    btn_retry->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_get_retry, this));
+//
+//
+//    return spr_retry;
+//}
 
 
-cocos2d::Sprite * MainMenuScreen::create_sprite_coin_cnt()
-{
-    cocos2d::Sprite * spr_coin = cocos2d::Sprite::create("res/ui/icon_coin.png");
-    
-    spr_coin->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
-    spr_coin->setScale(Utility::content_scale());
-//    btn_coin->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_get_coin, this));
-    
-    
-    return spr_coin;
-}
+//cocos2d::Sprite * MainMenuScreen::create_sprite_coin_cnt()
+//{
+//    cocos2d::Sprite * spr_coin = cocos2d::Sprite::create("res/ui/icon_coin.png");
+//
+//    spr_coin->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
+//    spr_coin->setScale(Utility::content_scale());
+////    btn_coin->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_get_coin, this));
+//
+//
+//    return spr_coin;
+//}
 
 
-cocos2d::ui::Button * MainMenuScreen::create_btn_options()
-{
-    cocos2d::ui::Button * btn_options = cocos2d::ui::Button::create("res/ui/btn_menu.png");
-    
-    btn_options->setAnchorPoint(cocos2d::Vec2(1.0, 1.0));
-    btn_options->setScale(Utility::content_scale());
-    btn_options->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_options, this));
-
-    
-    return btn_options;
-}
-
-
-cocos2d::ui::Button * MainMenuScreen::create_btn_remove_ads()
-{
-    cocos2d::ui::Button * btn_remove_ads = cocos2d::ui::Button::create("res/ui/icon_block_ads.png");
-    
-    btn_remove_ads->setAnchorPoint(cocos2d::Vec2(1.0, 0.0));
-    btn_remove_ads->setScale(Utility::content_scale());
-    btn_remove_ads->addClickEventListener(CC_CALLBACK_1(MainMenuScreen::callback_remove_ads, this));
-
-    
-    return btn_remove_ads;
-}
+//cocos2d::Label * MainMenuScreen::create_label_retry_cnt()
+//{
+//    cocos2d::Label * label_retry_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::retry_count()), FONT_KEN_FUTURE_THIN, 14);
+//    label_retry_cnt = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::retry_count()),
+//                                                          FONT_KEN_FUTURE_THIN,
+//                                                          14,
+//                                                          cocos2d::Vec2(0.0, 0.0),
+//                                                          cocos2d::Color3B(192, 177, 170));
+//    
+//    
+//    label_retry_cnt->enableOutline(cocos2d::Color4B::BLACK, 1);
+////    label_retry_cnt->enableShadow();
+//    
+//    
+//    return label_retry_cnt;
+//}
 
 
-cocos2d::Label * MainMenuScreen::create_label_retry_cnt()
-{
-    cocos2d::Label * label_retry_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::retry_count()), FONT_KEN_FUTURE_THIN, 14);
-    
-    label_retry_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
-    label_retry_cnt->setColor(cocos2d::Color3B(192, 177, 170));
-    label_retry_cnt->enableOutline(cocos2d::Color4B::BLACK, 1);
-//    label_retry_cnt->enableShadow();
-    
-    
-    return label_retry_cnt;
-}
-
-
-cocos2d::Label * MainMenuScreen::create_label_coin_cnt()
-{
-    cocos2d::Label * label_coin_cnt = cocos2d::Label::createWithTTF(std::to_string(PlayerProfile::coin_count()), FONT_KEN_FUTURE_THIN, 14);
-    
-    label_coin_cnt->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
-    label_coin_cnt->setColor(cocos2d::Color3B(192, 177, 170));
-    label_coin_cnt->enableOutline(cocos2d::Color4B::BLACK, 1);
-//    label_coin_cnt->enableShadow();
-    
-    
-    return label_coin_cnt;
-}
+//cocos2d::Label * MainMenuScreen::create_label_coin_cnt()
+//{
+//    cocos2d::Label * label_coin_cnt = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::coin_count()),
+//                                                                          FONT_KEN_FUTURE_THIN,
+//                                                                          14,
+//                                                                          cocos2d::Vec2(0.0, 0.0),
+//                                                                          cocos2d::Color3B(192, 177, 170));
+//
+//    label_coin_cnt->enableOutline(cocos2d::Color4B::BLACK, 1);
+//
+//
+//    return label_coin_cnt;
+//}
 
 
 void MainMenuScreen::callback_options(Ref *pSender)
@@ -304,26 +337,26 @@ void MainMenuScreen::callback_select_level_locked(Ref *pSender)
 }
 
 
-void MainMenuScreen::callback_get_retry(Ref *pSender)
-{
-    
-}
-
-
-void MainMenuScreen::callback_get_coin(Ref *pSender)
-{
-    
-}
+//void MainMenuScreen::callback_get_retry(Ref *pSender)
+//{
+//
+//}
+//
+//
+//void MainMenuScreen::callback_get_coin(Ref *pSender)
+//{
+//
+//}
 
 
 void MainMenuScreen::callback_remove_ads(cocos2d::Ref *pSender)
 {
     PlayerProfile::set_ads_enabled(false);
     
-    btn_remove_ads->removeFromParent();
-    btn_remove_ads = NULL;
+    btn_remove_ads_->removeFromParent();
+    btn_remove_ads_ = NULL;
     
-//    sdkbox::PluginSdkboxAds::hide("placement-banner");
+    sdkbox::PluginSdkboxAds::hide("placement-banner");
 }
 
 

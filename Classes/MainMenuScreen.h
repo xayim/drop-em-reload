@@ -27,19 +27,16 @@ private:
     
     cocos2d::ui::ScrollView * create_scrollview(unsigned int items_count);
     
-    cocos2d::Sprite * create_sprite_retry_cnt();
-    cocos2d::Sprite * create_sprite_coin_cnt();
-    cocos2d::ui::Button * create_btn_options();
-    cocos2d::ui::Button * create_btn_remove_ads();
-    cocos2d::Label * create_label_retry_cnt();
-    cocos2d::Label * create_label_coin_cnt();
+//    cocos2d::Sprite * create_sprite_retry_cnt();
+//    cocos2d::Sprite * create_sprite_coin_cnt();
+    
     
     void callback_help(Ref * pSender);
     void callback_options(Ref * pSender);
     void callback_select_level(cocos2d::Ref *pSender);
     void callback_select_level_locked(cocos2d::Ref *pSender);
-    void callback_get_retry(cocos2d::Ref *pSender);
-    void callback_get_coin(cocos2d::Ref *pSender);
+//    void callback_get_retry(cocos2d::Ref *pSender);
+//    void callback_get_coin(cocos2d::Ref *pSender);
     void callback_remove_ads(cocos2d::Ref *pSender);
     
     
@@ -88,11 +85,12 @@ private:
     
 //    cocos2d::ui::Button * btn_help_ = nullptr;
     cocos2d::ui::Button * btn_options_ = nullptr;
-    cocos2d::Sprite * btn_coin_ = nullptr;
-    cocos2d::Sprite * btn_retry_ = nullptr;
-    cocos2d::ui::Button * btn_remove_ads = nullptr;
-    cocos2d::Label * label_coin_cnt_ = nullptr;
-    cocos2d::Label * label_retry_cnt_ = nullptr;
+//    cocos2d::Sprite * icon_coin_ = nullptr;
+//    cocos2d::Sprite * btn_retry_ = nullptr;
+    cocos2d::ui::Button * btn_remove_ads_ = nullptr;
+//    cocos2d::Label * label_coin_cnt_ = nullptr;
+//    cocos2d::Label * label_retry_cnt_ = nullptr;
+    cocos2d::Label * label_menu_ = nullptr;
     cocos2d::ui::ScrollView * scrollview_ = nullptr;
     
     bool placement_interstitial_done;
