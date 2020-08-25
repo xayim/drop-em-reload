@@ -169,19 +169,20 @@ void GameplayScreen::init_ui()
     ui_ = Node::create();
     
     
-    icon_retry_ = create_sprite_retry_cnt();
-    icon_retry_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_top()));
-    ui_->addChild(icon_retry_);
-    
-    
-    label_retry_cnt_ = create_label_retry_cnt();
-    label_retry_cnt_->setPosition(cocos2d::Vec2(icon_retry_->getPosition().x+(icon_retry_->getContentSize().width*icon_retry_->getScale()),
-                                                icon_retry_->getPosition().y-(icon_retry_->getContentSize().height*icon_retry_->getScale())));
-    ui_->addChild(label_retry_cnt_);
+//    icon_retry_ = create_sprite_retry_cnt();
+//    icon_retry_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_top()));
+//    ui_->addChild(icon_retry_);
+//
+//
+//    label_retry_cnt_ = create_label_retry_cnt();
+//    label_retry_cnt_->setPosition(cocos2d::Vec2(icon_retry_->getPosition().x+(icon_retry_->getContentSize().width*icon_retry_->getScale()),
+//                                                icon_retry_->getPosition().y-(icon_retry_->getContentSize().height*icon_retry_->getScale())));
+//    ui_->addChild(label_retry_cnt_);
     
     
     
     btn_pause_ = create_btn_pause();
+    btn_pause_->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()));
     ui_->addChild(btn_pause_);
     
     
@@ -435,6 +436,7 @@ void GameplayScreen::init_touch_listener()
     listener->onTouchEnded = CC_CALLBACK_2(GameplayScreen::on_touch_ended, this);
     listener->setSwallowTouches(true);
     
+    
     cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 }
 
@@ -457,7 +459,7 @@ cocos2d::ui::Button * GameplayScreen::create_btn_pause()
 {
     cocos2d::ui::Button * btn_pause = UIComponentUtility::create_ui_button("res/ui/btn_pause.png",
                                                                            cocos2d::Vec2(1.0, 1.0),
-                                                                           cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()),
+                                                                           cocos2d::Vec2::ZERO,
                                                                            Utility::content_scale());
     
     btn_pause->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_pause, this));
@@ -469,9 +471,9 @@ cocos2d::ui::Button * GameplayScreen::create_btn_pause()
 
 cocos2d::ui::Button * GameplayScreen::create_btn_resume()
 {
-    cocos2d::ui::Button * btn_resume = UIComponentUtility::create_ui_button("res/ui/icon_x.png",
+    cocos2d::ui::Button * btn_resume = UIComponentUtility::create_ui_button("res/ui/btn_play.png",
                                                                             cocos2d::Vec2(1.0, 1.0),
-                                                                            cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()),
+                                                                            cocos2d::Vec2::ZERO,
                                                                             Utility::content_scale());
     
     btn_resume->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_resume, this));
@@ -481,17 +483,58 @@ cocos2d::ui::Button * GameplayScreen::create_btn_resume()
 }
 
 
-cocos2d::Sprite * GameplayScreen::create_sprite_retry_cnt()
+cocos2d::ui::Button * GameplayScreen::create_btn_home()
 {
-    cocos2d::Sprite * btn_retry = cocos2d::Sprite::create("res/ui/btn_retry_2.png");
+    cocos2d::ui::Button * btn_home = UIComponentUtility::create_ui_button("res/ui/btn_home.png",
+                                                                          cocos2d::Vec2(1.0, 1.0),
+                                                                          cocos2d::Vec2::ZERO,
+                                                                          Utility::content_scale());
     
-    btn_retry->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
-    btn_retry->setScale(Utility::content_scale());
-//    btn_retry->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_get_retry, this));
+    btn_home->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_home, this));
     
     
-    return btn_retry;
+    return btn_home;
 }
+
+
+cocos2d::ui::Button * GameplayScreen::create_btn_restart()
+{
+    cocos2d::ui::Button * btn_restart = UIComponentUtility::create_ui_button("res/ui/btn_reload.png",
+                                                                             cocos2d::Vec2(1.0, 1.0),
+                                                                             cocos2d::Vec2::ZERO,
+                                                                             Utility::content_scale());
+    
+    btn_restart->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_restart, this));
+    
+    
+    return btn_restart;
+}
+
+
+cocos2d::ui::Button * GameplayScreen::create_btn_forward()
+{
+    cocos2d::ui::Button * btn_advance = UIComponentUtility::create_ui_button("res/ui/btn_forward_play.png",
+                                                                           cocos2d::Vec2(1.0, 1.0),
+                                                                           cocos2d::Vec2::ZERO,
+                                                                           Utility::content_scale());
+    
+    btn_advance->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_advance, this));
+    
+    return btn_advance;
+}
+
+
+//cocos2d::Sprite * GameplayScreen::create_sprite_retry_cnt()
+//{
+//    cocos2d::Sprite * btn_retry = cocos2d::Sprite::create("res/ui/btn_retry_2.png");
+//
+//    btn_retry->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
+//    btn_retry->setScale(Utility::content_scale());
+////    btn_retry->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_get_retry, this));
+//
+//
+//    return btn_retry;
+//}
 
 
 cocos2d::Label * GameplayScreen::create_label_score()
@@ -501,29 +544,27 @@ cocos2d::Label * GameplayScreen::create_label_score()
                                                                        16,
                                                                        cocos2d::Vec2(0.5, 1.0),
                                                                        cocos2d::Vec2::ZERO,
-                                                                       cocos2d::Color3B(187, 252, 254));
-    
-    label_score->enableOutline(cocos2d::Color4B::BLACK, 1);
-    
+                                                                       cocos2d::Color3B::WHITE
+                                                                       /*cocos2d::Color3B(187, 252, 254)*/);
     
     return label_score;
 }
 
 
-cocos2d::Label * GameplayScreen::create_label_retry_cnt()
-{
-    cocos2d::Label * label_retry_cnt = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::retry_count()),
-                                                                           FONT_KEN_FUTURE_THIN,
-                                                                           14,
-                                                                           cocos2d::Vec2(0.0, 0.0),
-                                                                           cocos2d::Vec2::ZERO,
-                                                                           cocos2d::Color3B(192, 177, 170));
-    
-    label_retry_cnt->enableOutline(cocos2d::Color4B::BLACK, 1);
-    
-    
-    return label_retry_cnt;
-}
+//cocos2d::Label * GameplayScreen::create_label_retry_cnt()
+//{
+//    cocos2d::Label * label_retry_cnt = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::retry_count()),
+//                                                                           FONT_KEN_FUTURE_THIN,
+//                                                                           14,
+//                                                                           cocos2d::Vec2(0.0, 0.0),
+//                                                                           cocos2d::Vec2::ZERO,
+//                                                                           cocos2d::Color3B(192, 177, 170));
+//
+//    label_retry_cnt->enableOutline(cocos2d::Color4B::BLACK, 1);
+//
+//
+//    return label_retry_cnt;
+//}
 
 
 bool GameplayScreen::on_touch_began(cocos2d::Touch *touch, cocos2d::Event *unused_event)
@@ -563,7 +604,11 @@ void GameplayScreen::on_touch_ended(cocos2d::Touch *touch, cocos2d::Event *unuse
         else
             remove_rope(rope_structure_active, 0);
         
-        if (rope_structure_active->rope_count() == 0)   rope_structure_active = NULL;
+        if (rope_structure_active->rope_count() == 0)
+        {
+            rope_structure_active->remove_select_button();
+            rope_structure_active = NULL;
+        }
     }
     
     touch_moved = false;
@@ -577,128 +622,150 @@ void GameplayScreen::scroll_by(cocos2d::Vec2 delta)
 }
 
 
-void GameplayScreen::open_menu_pause()
+//void GameplayScreen::open_menu_pause()
+//{
+//    // dim the background
+//    background_->dim();
+//    
+//    // create empty node
+//    panel = Node::create();
+//    panel->setPosition(Utility::window_center());
+//    panel->setScale(Utility::content_scale());
+//    ui_->addChild(panel);
+//    
+//    
+//    cocos2d::Sprite * panel_bg = cocos2d::Sprite::create("res/ui/panel_small.png");
+//    panel->addChild(panel_bg);
+//    
+//    
+//    cocos2d::Sprite * panel_ribbon = cocos2d::Sprite::create("res/ui/ribbon.png");
+//    panel_ribbon->setPosition(cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y+panel_bg->getContentSize().height/2));
+//    panel->addChild(panel_ribbon);
+//    
+//    
+//    cocos2d::Label * panel_label = UIComponentUtility::create_ui_label("Paused",
+//                                                                       FONT_SKRANJI_REG,
+//                                                                       20,
+//                                                                       cocos2d::Vec2(0.5, 0.5),
+//                                                                       panel_ribbon->getPosition(),
+//                                                                       cocos2d::Color3B::WHITE);
+//    
+//    panel_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(panel_label);
+//    
+//    
+//    
+//    cocos2d::ui::Button * btn_main_menu = UIComponentUtility::create_ui_button("res/ui/btn_home.png",
+//                                                                               cocos2d::Vec2(1.25, 0.5),
+//                                                                               cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
+//                                                                               1);
+//    
+//    btn_main_menu->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_home, this));
+//    panel->addChild(btn_main_menu);
+//    
+//    
+//    cocos2d::ui::Button * btn_restart = UIComponentUtility::create_ui_button("res/ui/btn_reload.png",
+//                                                                             cocos2d::Vec2(-0.25, 0.5),
+//                                                                             cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
+//                                                                             1);
+//    
+//    btn_restart->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_restart, this));
+//    panel->addChild(btn_restart);
+//    
+//    
+//    
+////    cocos2d::ui::Button * btn_store = UIComponentUtility::create_ui_button("res/ui/btn_store.png",
+////                                                                           cocos2d::Vec2(-1.0, 0.5),
+////                                                                           cocos2d::Vec2(0.0, panel_bg->getPosition().y),
+////                                                                           1);
+////
+////    btn_store->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_store, this));
+////    panel->addChild(btn_store);
+//}
+
+
+void GameplayScreen::create_layout_pause()
 {
     // dim the background
     background_->dim();
     
-    // create empty node
-    panel = Node::create();
-    panel->setPosition(Utility::window_center());
-    panel->setScale(Utility::content_scale());
-    ui_->addChild(panel);
+    
+    // create menu node
+    node_menu_ = Node::create();
+    ui_->addChild(node_menu_);
     
     
-    cocos2d::Sprite * panel_bg = cocos2d::Sprite::create("res/ui/panel_small.png");
-    panel->addChild(panel_bg);
+    // create menu label
+    cocos2d::Label * label_menu = UIComponentUtility::create_ui_label("Paused",
+                                                                      FONT_KEN_FUTURE_THIN,
+                                                                      24,
+                                                                      cocos2d::Vec2(0.5, 1.0),
+                                                                      cocos2d::Vec2(Utility::window_center().x, Utility::ui_top()),
+                                                                      cocos2d::Color3B::WHITE);
+    node_menu_->addChild(label_menu);
     
     
-    cocos2d::Sprite * panel_ribbon = cocos2d::Sprite::create("res/ui/ribbon.png");
-    panel_ribbon->setPosition(cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y+panel_bg->getContentSize().height/2));
-    panel->addChild(panel_ribbon);
+    // create resume button
+    cocos2d::ui::Button * btn_resume = create_btn_resume();
+    btn_resume->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()));
+    node_menu_->addChild(btn_resume);
     
     
-    cocos2d::Label * panel_label = UIComponentUtility::create_ui_label("Paused",
-                                                                       FONT_SKRANJI_REG,
-                                                                       20,
-                                                                       cocos2d::Vec2(0.5, 0.5),
-                                                                       panel_ribbon->getPosition(),
-                                                                       cocos2d::Color3B::WHITE);
-    
-    panel_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(panel_label);
+    // create restart button
+    cocos2d::ui::Button * btn_restart = create_btn_restart();
+    btn_restart->setPosition(cocos2d::Vec2(Utility::ui_right(),
+                                           btn_resume->getPosition().y-UI_MARGIN_Y-btn_restart->getContentSize().height*btn_restart->getScale()));
+    node_menu_->addChild(btn_restart);
     
     
-    
-    cocos2d::ui::Button * btn_main_menu = UIComponentUtility::create_ui_button("res/ui/btn_home.png",
-                                                                               cocos2d::Vec2(1.25, 0.5),
-                                                                               cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
-                                                                               1);
-    
-    btn_main_menu->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_main_menu, this));
-    panel->addChild(btn_main_menu);
-    
-    
-    cocos2d::ui::Button * btn_restart = UIComponentUtility::create_ui_button("res/ui/btn_reload.png",
-                                                                             cocos2d::Vec2(-0.25, 0.5),
-                                                                             cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
-                                                                             1);
-    
-    btn_restart->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_restart, this));
-    panel->addChild(btn_restart);
-    
-    
-    
-//    cocos2d::ui::Button * btn_store = UIComponentUtility::create_ui_button("res/ui/btn_store.png",
-//                                                                           cocos2d::Vec2(-1.0, 0.5),
-//                                                                           cocos2d::Vec2(0.0, panel_bg->getPosition().y),
-//                                                                           1);
-//
-//    btn_store->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_store, this));
-//    panel->addChild(btn_store);
+    // create home button
+    cocos2d::ui::Button * btn_home = create_btn_home();
+    btn_home->setPosition(cocos2d::Vec2(Utility::ui_right(),
+                                        btn_restart->getPosition().y-UI_MARGIN_Y-btn_home->getContentSize().height*btn_restart->getScale()));
+    node_menu_->addChild(btn_home);
 }
 
 
-void GameplayScreen::open_menu_game_win()
+void GameplayScreen::create_layout_win()
 {
     // dim background
     background_->dim();
     
-    // create empty node
-    panel = Node::create();
-    panel->setPosition(Utility::window_center());
-    panel->setScale(Utility::content_scale());
-    ui_->addChild(panel);
+    
+    // create menu node
+    node_menu_ = Node::create();
+    ui_->addChild(node_menu_);
     
     
-    // layout canvas
-    cocos2d::Sprite * panel_bg = cocos2d::Sprite::create("res/ui/panel_large.png");
-    panel->addChild(panel_bg);
-    
-    // layout ribbon
-    cocos2d::Sprite * panel_ribbon = cocos2d::Sprite::create("res/ui/ribbon.png");
-    panel_ribbon->setPosition(cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y+panel_bg->getContentSize().height/2));
-    panel->addChild(panel_ribbon);
-    
-    // set ribon text
-    cocos2d::Label * panel_label = UIComponentUtility::create_ui_label("You Win",
-                                                                       FONT_SKRANJI_REG,
-                                                                       20,
-                                                                       cocos2d::Vec2(0.5, 0.5),
-                                                                       panel_ribbon->getPosition(),
-                                                                       cocos2d::Color3B::WHITE);
-    
-    panel_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(panel_label);
+    // create menu label
+    cocos2d::Label * label_menu = UIComponentUtility::create_ui_label("You Win",
+                                                                      FONT_KEN_FUTURE_THIN,
+                                                                      24,
+                                                                      cocos2d::Vec2(0.5, 1.0),
+                                                                      cocos2d::Vec2(Utility::window_center().x, Utility::ui_top()),
+                                                                      cocos2d::Color3B::WHITE);
+    node_menu_->addChild(label_menu);
     
     
-    
-    // layout buttons
-    cocos2d::ui::Button * btn_main_menu = UIComponentUtility::create_ui_button("res/ui/btn_home.png",
-                                                                               cocos2d::Vec2(2.0, 0.5),
-                                                                               cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
-                                                                               1);
-    
-    btn_main_menu->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_main_menu, this));
-    panel->addChild(btn_main_menu);
+    // create forward button
+    cocos2d::ui::Button * btn_forward = create_btn_forward();
+    btn_forward->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()));
+    node_menu_->addChild(btn_forward);
     
     
-    cocos2d::ui::Button * btn_restart = UIComponentUtility::create_ui_button("res/ui/btn_reload.png",
-                                                                             cocos2d::Vec2(0.5, 0.5),
-                                                                             cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
-                                                                             1);
-    
-    btn_restart->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_restart, this));
-    panel->addChild(btn_restart);
+    // create restart button
+    cocos2d::ui::Button * btn_restart = create_btn_restart();
+    btn_restart->setPosition(cocos2d::Vec2(Utility::ui_right(),
+                                           btn_forward->getPosition().y-UI_MARGIN_Y-btn_restart->getContentSize().height*btn_restart->getScale()));
+    node_menu_->addChild(btn_restart);
     
     
-    cocos2d::ui::Button * btn_advance = UIComponentUtility::create_ui_button("res/ui/btn_forward_play.png",
-                                                                           cocos2d::Vec2(-1.0, 0.5),
-                                                                           cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
-                                                                           1);
+    // create home button
+    cocos2d::ui::Button * btn_home = create_btn_home();
+    btn_home->setPosition(cocos2d::Vec2(Utility::ui_right(),
+                                        btn_restart->getPosition().y-UI_MARGIN_Y-btn_home->getContentSize().height*btn_home->getScale()));
+    node_menu_->addChild(btn_home);
     
-    btn_advance->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_advance, this));
-    panel->addChild(btn_advance);
     
     
     
@@ -707,66 +774,60 @@ void GameplayScreen::open_menu_game_win()
                                                                             FONT_SKRANJI_REG,
                                                                             16,
                                                                             cocos2d::Vec2(1.0, 0.5),
-                                                                            cocos2d::Vec2(panel_bg->getPosition().x-UI_MARGIN_X, panel_ribbon->getPosition().y-UI_MARGIN_Y*5),
+                                                                            cocos2d::Vec2(Utility::window_center().x-UI_MARGIN_X, Utility::ui_top()-UI_MARGIN_Y*7),
                                                                             cocos2d::Color3B::WHITE);
     
-    boxes_text_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(boxes_text_label);
+    ui_->addChild(boxes_text_label);
     
 
-    cocos2d::Label * boxes_score_label = UIComponentUtility::create_ui_label(std::to_string(level_document["enemy"].Size())+ "x20",
+    cocos2d::Label * boxes_score_label = UIComponentUtility::create_ui_label(std::to_string(level_document["enemy"].Size())+ " x20",
                                                                              FONT_SKRANJI_REG,
                                                                              16,
                                                                              cocos2d::Vec2(0.0, 0.5),
-                                                                             cocos2d::Vec2(panel_bg->getPosition().x+UI_MARGIN_X, panel_ribbon->getPosition().y-UI_MARGIN_Y*5),
+                                                                             cocos2d::Vec2(Utility::window_center().x+UI_MARGIN_X, Utility::ui_top()-UI_MARGIN_Y*7),
                                                                              cocos2d::Color3B::WHITE);
     
-    boxes_score_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(boxes_score_label);
+    ui_->addChild(boxes_score_label);
     
     
     cocos2d::Label * retry_text_label = UIComponentUtility::create_ui_label("Retry Left",
                                                                             FONT_SKRANJI_REG,
                                                                             16,
                                                                             cocos2d::Vec2(1.0, 0.5),
-                                                                            cocos2d::Vec2(panel_bg->getPosition().x-UI_MARGIN_X, boxes_text_label->getPosition().y-UI_MARGIN_Y*3),
+                                                                            cocos2d::Vec2(Utility::window_center().x-UI_MARGIN_X, boxes_text_label->getPosition().y-UI_MARGIN_Y*3),
                                                                             cocos2d::Color3B::WHITE);
     
-    retry_text_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(retry_text_label);
+    ui_->addChild(retry_text_label);
     
     
     cocos2d::Label * retry_score_label = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::retry_count())+" x10",
                                                                              FONT_SKRANJI_REG,
                                                                              16,
                                                                              cocos2d::Vec2(0.0, 0.5),
-                                                                             cocos2d::Vec2(panel_bg->getPosition().x+UI_MARGIN_X, boxes_score_label->getPosition().y-UI_MARGIN_Y*3),
+                                                                             cocos2d::Vec2(Utility::window_center().x+UI_MARGIN_X, boxes_score_label->getPosition().y-UI_MARGIN_Y*3),
                                                                              cocos2d::Color3B::WHITE);
     
-    retry_score_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(retry_score_label);
+    ui_->addChild(retry_score_label);
     
     
     cocos2d::Label * bonus_text_label = UIComponentUtility::create_ui_label("Level Bonus",
                                                                             FONT_SKRANJI_REG,
                                                                             16,
                                                                             cocos2d::Vec2(1.0, 0.5),
-                                                                            cocos2d::Vec2(panel_bg->getPosition().x-UI_MARGIN_X, retry_text_label->getPosition().y-UI_MARGIN_Y*3),
+                                                                            cocos2d::Vec2(Utility::window_center().x-UI_MARGIN_X, retry_text_label->getPosition().y-UI_MARGIN_Y*3),
                                                                             cocos2d::Color3B::WHITE);
     
-    bonus_text_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(bonus_text_label);
+    ui_->addChild(bonus_text_label);
     
     
     cocos2d::Label * bonus_score_label = UIComponentUtility::create_ui_label(std::to_string(250),
                                                                              FONT_SKRANJI_REG,
                                                                              16,
                                                                              cocos2d::Vec2(0.0, 0.5),
-                                                                             cocos2d::Vec2(panel_bg->getPosition().x+UI_MARGIN_X, retry_score_label->getPosition().y-UI_MARGIN_Y*3),
+                                                                             cocos2d::Vec2(Utility::window_center().x+UI_MARGIN_X, retry_score_label->getPosition().y-UI_MARGIN_Y*3),
                                                                              cocos2d::Color3B::WHITE);
     
-    bonus_score_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(bonus_score_label);
+    ui_->addChild(bonus_score_label);
     
     
     unsigned int total_score = level_document["enemy"].Size()*20+PlayerProfile::retry_count()*10+250;
@@ -775,81 +836,271 @@ void GameplayScreen::open_menu_game_win()
                                                                             FONT_SKRANJI_REG,
                                                                             16,
                                                                             cocos2d::Vec2(1.0, 0.5),
-                                                                            cocos2d::Vec2(panel_bg->getPosition().x-UI_MARGIN_X, bonus_text_label->getPosition().y-UI_MARGIN_Y*4),
+                                                                            cocos2d::Vec2(Utility::window_center().x-UI_MARGIN_X, bonus_text_label->getPosition().y-UI_MARGIN_Y*4),
                                                                             cocos2d::Color3B::WHITE);
     
-    total_text_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(total_text_label);
+    ui_->addChild(total_text_label);
     
     
     cocos2d::Label * total_score_label = UIComponentUtility::create_ui_label(std::to_string(total_score),
                                                                              FONT_SKRANJI_REG,
                                                                              16,
                                                                              cocos2d::Vec2(0.0, 0.5),
-                                                                             cocos2d::Vec2(panel_bg->getPosition().x+UI_MARGIN_X, bonus_score_label->getPosition().y-UI_MARGIN_Y*4),
+                                                                             cocos2d::Vec2(Utility::window_center().x+UI_MARGIN_X, bonus_score_label->getPosition().y-UI_MARGIN_Y*4),
                                                                              cocos2d::Color3B::WHITE);
     
-    total_score_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(total_score_label);
+    ui_->addChild(total_score_label);
 }
 
 
-void GameplayScreen::open_menu_game_lose()
+void GameplayScreen::create_layout_lose()
 {
     // dim background
     background_->dim();
     
-    // create empty node
-    panel = Node::create();
-    panel->setPosition(Utility::window_center());
-    panel->setScale(Utility::content_scale());
-    ui_->addChild(panel);
+    
+    // create menu node
+    node_menu_ = Node::create();
+    ui_->addChild(node_menu_);
     
     
-    cocos2d::Sprite * panel_bg = cocos2d::Sprite::create("res/ui/panel_small.png");
-    panel->addChild(panel_bg);
-    
-    cocos2d::Sprite * panel_ribbon = cocos2d::Sprite::create("res/ui/ribbon.png");
-    panel_ribbon->setPosition(cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y+panel_bg->getContentSize().height/2));
-    panel->addChild(panel_ribbon);
-    
-    
-    
-    cocos2d::Label * panel_label = UIComponentUtility::create_ui_label("You Lose",
-                                                                       FONT_SKRANJI_REG,
-                                                                       20,
-                                                                       cocos2d::Vec2(0.5, 0.5),
-                                                                       panel_ribbon->getPosition(),
-                                                                       cocos2d::Color3B::WHITE);
-    
-    panel_label->enableOutline(cocos2d::Color4B::BLACK, 1);
-    panel->addChild(panel_label);
+    // create menu label
+    cocos2d::Label * label_menu = UIComponentUtility::create_ui_label("You Lose",
+                                                                      FONT_KEN_FUTURE_THIN,
+                                                                      24,
+                                                                      cocos2d::Vec2(0.5, 1.0),
+                                                                      cocos2d::Vec2(Utility::window_center().x, Utility::ui_top()),
+                                                                      cocos2d::Color3B::WHITE);
+    node_menu_->addChild(label_menu);
     
     
-    cocos2d::ui::Button * btn_main_home = UIComponentUtility::create_ui_button("res/ui/btn_home.png",
-                                                                               cocos2d::Vec2(1.25, 0.5),
-                                                                               cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
-                                                                               1);
+    // create restart button
+    cocos2d::ui::Button * btn_restart = create_btn_restart();
+    btn_restart->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()));
+    node_menu_->addChild(btn_restart);
     
     
-    btn_main_home->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_main_menu, this));
-    panel->addChild(btn_main_home);
-    
-    
-    cocos2d::ui::Button * btn_restart = UIComponentUtility::create_ui_button("res/ui/btn_reload.png",
-                                                                             cocos2d::Vec2(-0.25, 0.5),
-                                                                             cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
-                                                                             1);
-    
-    btn_restart->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_restart, this));
-    panel->addChild(btn_restart);
+    // create home button
+    cocos2d::ui::Button * btn_home = create_btn_home();
+    btn_home->setPosition(cocos2d::Vec2(Utility::ui_right(),
+                                         btn_restart->getPosition().y-UI_MARGIN_Y-btn_home->getContentSize().height*btn_home->getScale()));
+    ui_->addChild(btn_home);
 }
 
 
-void GameplayScreen::open_menu_store()
-{
-    
-}
+//void GameplayScreen::open_menu_game_win()
+//{
+//    // dim background
+//    background_->dim();
+//
+//    // create empty node
+////    panel = Node::create();
+////    panel->setPosition(Utility::window_center());
+////    panel->setScale(Utility::content_scale());
+////    ui_->addChild(panel);
+//
+//
+//    // layout canvas
+////    cocos2d::Sprite * panel_bg = cocos2d::Sprite::create("res/ui/panel_large.png");
+////    panel_bg->setVisible(false);
+////    panel->addChild(panel_bg);
+//
+//    // layout ribbon
+////    cocos2d::Sprite * panel_ribbon = cocos2d::Sprite::create("res/ui/ribbon.png");
+////    panel_ribbon->setPosition(cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y+panel_bg->getContentSize().height/2));
+////    panel_ribbon->setVisible(false);
+////    panel->addChild(panel_ribbon);
+//
+//
+//    label_menu_ = UIComponentUtility::create_ui_label("You Win",
+//                                                      FONT_KEN_FUTURE_THIN,
+//                                                      24,
+//                                                      cocos2d::Vec2(0.5, 0.5),
+//                                                      cocos2d::Vec2(Utility::window_center().x, Utility::ui_top()),
+//                                                      cocos2d::Color3B::WHITE);
+//
+//    label_menu_->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    ui_->addChild(label_menu_);
+//
+//
+//
+//    // layout buttons
+//    cocos2d::ui::Button * btn_main_menu = UIComponentUtility::create_ui_button("res/ui/btn_home.png",
+//                                                                               cocos2d::Vec2(2.0, 0.5),
+//                                                                               cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
+//                                                                               1);
+//
+//    btn_main_menu->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_home, this));
+//    panel->addChild(btn_main_menu);
+//
+//
+//    cocos2d::ui::Button * btn_restart = UIComponentUtility::create_ui_button("res/ui/btn_reload.png",
+//                                                                             cocos2d::Vec2(0.5, 0.5),
+//                                                                             cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
+//                                                                             1);
+//
+//    btn_restart->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_restart, this));
+//    panel->addChild(btn_restart);
+//
+//
+//    cocos2d::ui::Button * btn_advance = UIComponentUtility::create_ui_button("res/ui/btn_forward_play.png",
+//                                                                           cocos2d::Vec2(-1.0, 0.5),
+//                                                                           cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
+//                                                                           1);
+//
+//    btn_advance->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_advance, this));
+//    panel->addChild(btn_advance);
+//
+//
+//
+//    // layout level complete info
+//    cocos2d::Label * boxes_text_label = UIComponentUtility::create_ui_label("Boxes Droped",
+//                                                                            FONT_SKRANJI_REG,
+//                                                                            16,
+//                                                                            cocos2d::Vec2(1.0, 0.5),
+//                                                                            cocos2d::Vec2(panel_bg->getPosition().x-UI_MARGIN_X, panel_ribbon->getPosition().y-UI_MARGIN_Y*5),
+//                                                                            cocos2d::Color3B::WHITE);
+//
+//    boxes_text_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(boxes_text_label);
+//
+//
+//    cocos2d::Label * boxes_score_label = UIComponentUtility::create_ui_label(std::to_string(level_document["enemy"].Size())+ "x20",
+//                                                                             FONT_SKRANJI_REG,
+//                                                                             16,
+//                                                                             cocos2d::Vec2(0.0, 0.5),
+//                                                                             cocos2d::Vec2(panel_bg->getPosition().x+UI_MARGIN_X, panel_ribbon->getPosition().y-UI_MARGIN_Y*5),
+//                                                                             cocos2d::Color3B::WHITE);
+//
+//    boxes_score_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(boxes_score_label);
+//
+//
+//    cocos2d::Label * retry_text_label = UIComponentUtility::create_ui_label("Retry Left",
+//                                                                            FONT_SKRANJI_REG,
+//                                                                            16,
+//                                                                            cocos2d::Vec2(1.0, 0.5),
+//                                                                            cocos2d::Vec2(panel_bg->getPosition().x-UI_MARGIN_X, boxes_text_label->getPosition().y-UI_MARGIN_Y*3),
+//                                                                            cocos2d::Color3B::WHITE);
+//
+//    retry_text_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(retry_text_label);
+//
+//
+//    cocos2d::Label * retry_score_label = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::retry_count())+" x10",
+//                                                                             FONT_SKRANJI_REG,
+//                                                                             16,
+//                                                                             cocos2d::Vec2(0.0, 0.5),
+//                                                                             cocos2d::Vec2(panel_bg->getPosition().x+UI_MARGIN_X, boxes_score_label->getPosition().y-UI_MARGIN_Y*3),
+//                                                                             cocos2d::Color3B::WHITE);
+//
+//    retry_score_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(retry_score_label);
+//
+//
+//    cocos2d::Label * bonus_text_label = UIComponentUtility::create_ui_label("Level Bonus",
+//                                                                            FONT_SKRANJI_REG,
+//                                                                            16,
+//                                                                            cocos2d::Vec2(1.0, 0.5),
+//                                                                            cocos2d::Vec2(panel_bg->getPosition().x-UI_MARGIN_X, retry_text_label->getPosition().y-UI_MARGIN_Y*3),
+//                                                                            cocos2d::Color3B::WHITE);
+//
+//    bonus_text_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(bonus_text_label);
+//
+//
+//    cocos2d::Label * bonus_score_label = UIComponentUtility::create_ui_label(std::to_string(250),
+//                                                                             FONT_SKRANJI_REG,
+//                                                                             16,
+//                                                                             cocos2d::Vec2(0.0, 0.5),
+//                                                                             cocos2d::Vec2(panel_bg->getPosition().x+UI_MARGIN_X, retry_score_label->getPosition().y-UI_MARGIN_Y*3),
+//                                                                             cocos2d::Color3B::WHITE);
+//
+//    bonus_score_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(bonus_score_label);
+//
+//
+//    unsigned int total_score = level_document["enemy"].Size()*20+PlayerProfile::retry_count()*10+250;
+//
+//    cocos2d::Label * total_text_label = UIComponentUtility::create_ui_label("Total",
+//                                                                            FONT_SKRANJI_REG,
+//                                                                            16,
+//                                                                            cocos2d::Vec2(1.0, 0.5),
+//                                                                            cocos2d::Vec2(panel_bg->getPosition().x-UI_MARGIN_X, bonus_text_label->getPosition().y-UI_MARGIN_Y*4),
+//                                                                            cocos2d::Color3B::WHITE);
+//
+//    total_text_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(total_text_label);
+//
+//
+//    cocos2d::Label * total_score_label = UIComponentUtility::create_ui_label(std::to_string(total_score),
+//                                                                             FONT_SKRANJI_REG,
+//                                                                             16,
+//                                                                             cocos2d::Vec2(0.0, 0.5),
+//                                                                             cocos2d::Vec2(panel_bg->getPosition().x+UI_MARGIN_X, bonus_score_label->getPosition().y-UI_MARGIN_Y*4),
+//                                                                             cocos2d::Color3B::WHITE);
+//
+//    total_score_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(total_score_label);
+//}
+
+
+//void GameplayScreen::open_menu_game_lose()
+//{
+//    // dim background
+//    background_->dim();
+//
+//    // create empty node
+//    panel = Node::create();
+//    panel->setPosition(Utility::window_center());
+//    panel->setScale(Utility::content_scale());
+//    ui_->addChild(panel);
+//
+//
+//    cocos2d::Sprite * panel_bg = cocos2d::Sprite::create("res/ui/panel_small.png");
+//    panel->addChild(panel_bg);
+//
+//    cocos2d::Sprite * panel_ribbon = cocos2d::Sprite::create("res/ui/ribbon.png");
+//    panel_ribbon->setPosition(cocos2d::Vec2(panel_bg->getPosition().x, panel_bg->getPosition().y+panel_bg->getContentSize().height/2));
+//    panel->addChild(panel_ribbon);
+//
+//
+//
+//    cocos2d::Label * panel_label = UIComponentUtility::create_ui_label("You Lose",
+//                                                                       FONT_SKRANJI_REG,
+//                                                                       20,
+//                                                                       cocos2d::Vec2(0.5, 0.5),
+//                                                                       panel_ribbon->getPosition(),
+//                                                                       cocos2d::Color3B::WHITE);
+//
+//    panel_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+//    panel->addChild(panel_label);
+//
+//
+//    cocos2d::ui::Button * btn_main_home = UIComponentUtility::create_ui_button("res/ui/btn_home.png",
+//                                                                               cocos2d::Vec2(1.25, 0.5),
+//                                                                               cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
+//                                                                               1);
+//
+//
+//    btn_main_home->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_home, this));
+//    panel->addChild(btn_main_home);
+//
+//
+//    cocos2d::ui::Button * btn_restart = UIComponentUtility::create_ui_button("res/ui/btn_reload.png",
+//                                                                             cocos2d::Vec2(-0.25, 0.5),
+//                                                                             cocos2d::Vec2(0.0, panel_bg->getPosition().y-panel_bg->getContentSize().height/2),
+//                                                                             1);
+//
+//    btn_restart->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_restart, this));
+//    panel->addChild(btn_restart);
+//}
+
+
+//void GameplayScreen::open_menu_store()
+//{
+//    
+//}
 
 
 void GameplayScreen::callback_pause(cocos2d::Ref *pSender)
@@ -857,40 +1108,54 @@ void GameplayScreen::callback_pause(cocos2d::Ref *pSender)
     Audio::instance()->play_sfx_button_click();
     
     
-    icon_retry_->removeFromParent();
+//    icon_retry_->removeFromParent();
+//    
+//    label_retry_cnt_->removeFromParent();
     
-    label_retry_cnt_->removeFromParent();
     
+//    label_menu_->removeFromParent();
     
-    label_score_->removeFromParent();
+    label_score_->setAnchorPoint(cocos2d::Vec2(0.0, 1.0));
+    label_score_->setPosition(Vec2(Utility::ui_left(), Utility::ui_top()));
     
     
     btn_pause_->removeFromParent();
     
-    btn_resume_ = create_btn_resume();
-    ui_->addChild(btn_resume_);
+//    btn_resume_ = create_btn_resume();
+//    ui_->addChild(btn_resume_);
     
     
-    if (PlayerProfile::ads_enabled())
-        sdkbox::PluginSdkboxAds::placement("placement-interstitial");
+//    open_menu_pause();
+    create_layout_pause();
     
     
-    open_menu_pause();
+    cocos2d::Director::getInstance()->getEventDispatcher()->pauseEventListenersForTarget(this);
+    
     
     flag_gamepause = true;
 }
 
 
-void GameplayScreen::callback_retry(cocos2d::Ref *pSender)
+void GameplayScreen::callback_reset_jammer(cocos2d::Ref *pSender)
 {
     cocos2d::ui::Button * btn_retry = (cocos2d::ui::Button *)pSender;
     RopeStructure * rope_structure = (RopeStructure *)btn_retry->getUserData();
     
     if (PlayerProfile::retry_count() > 0)
     {
-        btn_retry->removeFromParent();
+        PlayerProfile::set_retry_count(PlayerProfile::retry_count()-1);
+        
+        
+        for (unsigned int i = 0; i < rope_structure_list_.size(); ++i)
+        {
+            if (rope_structure_list_.at(i)->label_retry_cnt_ != NULL)
+                rope_structure_list_.at(i)->set_retry_count_label(std::to_string(PlayerProfile::retry_count()));
+        }
         
         rope_structure->reset();
+        
+        rope_structure->remove_reset_button();
+        rope_structure->remove_reset_count_label();
         
         
         
@@ -918,13 +1183,12 @@ void GameplayScreen::callback_retry(cocos2d::Ref *pSender)
         }
         
         
-        PlayerProfile::set_retry_count(PlayerProfile::retry_count()-1);
         
-        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
+//        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
     }
     else
     {
-        callback_get_retry(icon_retry_);
+//        callback_get_retry(icon_retry_);
     }
     
     
@@ -943,32 +1207,45 @@ void GameplayScreen::callback_resume(cocos2d::Ref *pSender)
     // bright the background
     background_->bright();
     
-    Audio::instance()->play_sfx_button_click();
     
-    panel->removeFromParent();
-    
-    
-    icon_retry_ = create_sprite_retry_cnt();
-    icon_retry_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_top()));
-    ui_->addChild(icon_retry_);
-    
-    label_retry_cnt_ = create_label_retry_cnt();
-    label_retry_cnt_->setPosition(cocos2d::Vec2(icon_retry_->getPosition().x+(icon_retry_->getContentSize().width*icon_retry_->getScale()),
-                                                icon_retry_->getPosition().y-(icon_retry_->getContentSize().height*icon_retry_->getScale())));
-    ui_->addChild(label_retry_cnt_);
+    label_score_->setAnchorPoint(cocos2d::Vec2(0.5, 1.0));
+    label_score_->setPosition(cocos2d::Vec2(Utility::window_center().x, Utility::ui_top()));
     
     
-    btn_pause_ =  create_btn_pause();
+    node_menu_->removeFromParent();
+    
+//    label_menu_->removeFromParent();
+//
+//    btn_resume_->removeFromParent();
+//
+//    btn_restart_->removeFromParent();
+//
+//    btn_home_->removeFromParent();
+    
+    
+//    icon_retry_ = create_sprite_retry_cnt();
+//    icon_retry_->setPosition(cocos2d::Vec2(Utility::ui_left(), Utility::ui_top()));
+//    ui_->addChild(icon_retry_);
+//
+//    label_retry_cnt_ = create_label_retry_cnt();
+//    label_retry_cnt_->setPosition(cocos2d::Vec2(icon_retry_->getPosition().x+(icon_retry_->getContentSize().width*icon_retry_->getScale()),
+//                                                icon_retry_->getPosition().y-(icon_retry_->getContentSize().height*icon_retry_->getScale())));
+//    ui_->addChild(label_retry_cnt_);
+    
+    
+    btn_pause_ = create_btn_pause();
+    btn_pause_->setPosition(cocos2d::Vec2(Utility::ui_right(), Utility::ui_top()));
     ui_->addChild(btn_pause_);
     
     
-    label_score_ = create_label_score();
-    label_score_->setPosition(cocos2d::Vec2(Utility::window_center().x, Utility::ui_top()));
-    ui_->addChild(label_score_);
+//    label_menu_ = create_label_score();
+//    label_menu_->setPosition(cocos2d::Vec2(Utility::window_center().x, Utility::ui_top()));
+//    ui_->addChild(label_menu_);
     
     
-    btn_resume_->removeFromParent();
+    cocos2d::Director::getInstance()->getEventDispatcher()->resumeEventListenersForTarget(this);
     
+    Audio::instance()->play_sfx_button_click();
     
     flag_gamepause = false;
 }
@@ -978,18 +1255,18 @@ void GameplayScreen::callback_restart(cocos2d::Ref *pSender)
 {
     Audio::instance()->play_sfx_button_click();
     
-    panel->removeFromParent();
+//    panel->removeFromParent();
     
     cocos2d::Scene * scene = GameplayScreen::create_scene(level_document["level_id"].GetInt());
     cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, scene));
 }
 
 
-void GameplayScreen::callback_main_menu(cocos2d::Ref *pSender)
+void GameplayScreen::callback_home(cocos2d::Ref *pSender)
 {
     Audio::instance()->play_sfx_button_click();
     
-    panel->removeFromParent();
+//    panel->removeFromParent();
     
     cocos2d::Scene * scene = MainMenuScreen::create_scene();
     cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, scene));
@@ -1005,7 +1282,7 @@ void GameplayScreen::callback_advance(cocos2d::Ref *pSender)
     
     Audio::instance()->play_sfx_button_click();
     
-    panel->removeFromParent();
+//    panel->removeFromParent();
     
     cocos2d::Scene * scene = GameplayScreen::create_scene(level_id);
     cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, scene));
@@ -1032,6 +1309,7 @@ void GameplayScreen::callback_select(Ref *pSender)
     {
         if (rope_structure_active)  rope_structure_active->set_active(false);
         
+        
         rope_structure->set_active(true);
         
         rope_structure_active = rope_structure;
@@ -1051,7 +1329,7 @@ void GameplayScreen::onAdAction( const std::string& ad_unit_id, const std::strin
     if (ad_unit_id == "UnityAds" && zone == "reward" && action_type == sdkbox::AdActionType::AD_ENDED)
     {
         PlayerProfile::set_retry_count(PlayerProfile::retry_count()+RETRY_REWARD);
-        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
+//        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
     }
 }
 
@@ -1061,7 +1339,7 @@ void GameplayScreen::onRewardAction( const std::string& ad_unit_id, const std::s
     if (reward_succeed)
     {
         PlayerProfile::set_retry_count(PlayerProfile::retry_count()+RETRY_REWARD);
-        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
+//        label_retry_cnt_->setString(std::to_string(PlayerProfile::retry_count()));
     }
 }
 
@@ -1104,35 +1382,53 @@ void GameplayScreen::update_game_state()
 {
     if (count_enemies() == 0)
     {
-        icon_retry_->removeFromParent();
+//        icon_retry_->removeFromParent();
         
-        label_retry_cnt_->removeFromParent();
+//        label_retry_cnt_->removeFromParent();
         
         label_score_->removeFromParent();
         
         btn_pause_->removeFromParent();
         
-        
-        open_menu_game_win();
+        create_layout_win();
+//        open_menu_game_win();
         
         
         flag_gameover = true;
     }
     else if (count_jammers() == 0 && PlayerProfile::retry_count() == 0)
     {
-        icon_retry_->removeFromParent();
+//        icon_retry_->removeFromParent();
         
-        label_retry_cnt_->removeFromParent();
+//        label_retry_cnt_->removeFromParent();
         
         label_score_->removeFromParent();
         
         btn_pause_->removeFromParent();
         
         
-        open_menu_game_lose();
+        create_layout_lose();
+//        open_menu_game_lose();
         
         
         flag_gameover = true;
+    }
+    
+    
+    if (flag_gameover)
+    {
+        if (PlayerProfile::ads_enabled())   sdkbox::PluginSdkboxAds::placement("placement-interstitial");
+        
+        cocos2d::Director::getInstance()->getEventDispatcher()->pauseEventListenersForTarget(this);
+        
+        for (unsigned int i = 0; i < rope_structure_list_.size(); ++i)
+        {
+            if (rope_structure_list_.at(i)->label_retry_cnt_ != NULL)   rope_structure_list_.at(i)->remove_reset_count_label();
+            
+            if (rope_structure_list_.at(i)->btn_select_ != NULL)    rope_structure_list_.at(i)->remove_select_button();
+            
+            if (rope_structure_list_.at(i)->btn_reset_ != NULL)    rope_structure_list_.at(i)->remove_reset_button();
+        }
     }
 }
 
@@ -1196,11 +1492,28 @@ void GameplayScreen::check_contacts()
         
         rope_structure->destroy_jammer();
         
-        // create a button to reset that rope structure and add it to layer
-        cocos2d::ui::Button * btn_reset = rope_structure->create_button_reset();
-        btn_reset->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_retry, this));
         
-        addChild(btn_reset);
+        // create a button to reset that rope structure and add it to layer
+        if (!flag_gameover)
+        {
+            cocos2d::ui::Button * btn_reset = rope_structure->create_button_reset();
+            btn_reset->addClickEventListener(CC_CALLBACK_1(GameplayScreen::callback_reset_jammer, this));
+            addChild(btn_reset);
+            
+
+            cocos2d::Label * label_retry_cnt = rope_structure->create_label_retry_count(std::to_string(PlayerProfile::retry_count()));
+            addChild(label_retry_cnt);
+        }
+        
+//            
+//            label_retry_cnt_ = UIComponentUtility::create_ui_label(std::to_string(PlayerProfile::retry_count()),
+//                                                                   FONT_SKRANJI_REG,
+//                                                                   16,
+//                                                                   cocos2d::Vec2(0.5, 0.5),
+//                                                                   btn_reset_jammer_->getPosition(),
+//                                                                   cocos2d::Color3B::WHITE);
+//            label_retry_cnt_->setCameraMask((unsigned short) CameraFlag::USER1);
+//            addChild(label_retry_cnt_);
     }
     
     for (enemy_itr = enemy_del_list.begin(); enemy_itr != enemy_del_list.end(); ++enemy_itr)

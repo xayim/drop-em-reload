@@ -41,13 +41,19 @@ private:
     void init_cameras();
     cocos2d::ui::Button * create_btn_pause();
     cocos2d::ui::Button * create_btn_resume();
-    cocos2d::Sprite * create_sprite_retry_cnt();
+    cocos2d::ui::Button * create_btn_home();
+    cocos2d::ui::Button * create_btn_restart();
+    cocos2d::ui::Button * create_btn_forward();
+//    cocos2d::Sprite * create_sprite_retry_cnt();
     cocos2d::Label * create_label_score();
-    cocos2d::Label * create_label_retry_cnt();
-    void open_menu_pause();
-    void open_menu_game_win();
-    void open_menu_game_lose();
-    void open_menu_store();
+//    cocos2d::Label * create_label_retry_cnt();
+//    void open_menu_pause();
+    void create_layout_pause();
+    void create_layout_win();
+    void create_layout_lose();
+//    void open_menu_game_win();
+//    void open_menu_game_lose();
+//    void open_menu_store();
     void scroll_by(cocos2d::Vec2 delta);
     void remove_rope(RopeStructure * rope_structure, unsigned int rope_index);
     void check_contacts();
@@ -59,11 +65,11 @@ private:
     
     // CALLBACKS
     void callback_pause(Ref * pSender);
-    void callback_retry(Ref * pSender);
+    void callback_reset_jammer(Ref * pSender);
     void callback_get_retry(Ref * pSender);
     void callback_resume(Ref * pSender);
     void callback_restart(Ref * pSender);
-    void callback_main_menu(Ref * pSender);
+    void callback_home(Ref * pSender);
     void callback_advance(Ref * pSender);
     void callback_hinge(Ref *pSender);
     void callback_select(Ref *pSender);
@@ -101,12 +107,18 @@ private:
     
     
     // GRAPHICS
-    Node * panel;
+//    Node * panel;
+    Node * node_menu_;
+//    cocos2d::Label * label_menu_;
     cocos2d::Label * label_score_;
-    cocos2d::Label * label_retry_cnt_;
+    cocos2d::Label * label_reset_jammer_cnt_;
     cocos2d::ui::Button * btn_pause_;
-    cocos2d::ui::Button * btn_resume_;
-    cocos2d::Sprite * icon_retry_;
+    cocos2d::ui::Button * btn_reset_jammer_;
+//    cocos2d::ui::Button * btn_resume_;
+//    cocos2d::ui::Button * btn_home_;
+//    cocos2d::ui::Button * btn_restart_;
+//    cocos2d::ui::Button * btn_forward_;
+//    cocos2d::Sprite * icon_retry_;
     cocos2d::DrawNode * draw_node;
     
     
