@@ -18,7 +18,8 @@ public:
                                             float font_size,
                                             cocos2d::Vec2 anchor,
                                             cocos2d::Vec2 position,
-                                            const cocos2d::Color3B &color);
+                                            const cocos2d::Color3B &color,
+                                            bool enable_outline);
     
 };
 
