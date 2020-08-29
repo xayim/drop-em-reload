@@ -8,15 +8,13 @@
 #include "PlayerProfile.h"
 #include "UIComponentUtility.h"
 #include "Utility.h"
-//#include "WorldSelectScreen.h"
 
 
 cocos2d::Scene * SettingsScreen::create_scene()
 {
     cocos2d::Scene * scene = cocos2d::Scene::create();
-    SettingsScreen * settings_screen = SettingsScreen::create();
     
-    scene->addChild(settings_screen);
+    scene->addChild(SettingsScreen::create());
     
     return scene;
 }
@@ -24,16 +22,6 @@ cocos2d::Scene * SettingsScreen::create_scene()
 bool SettingsScreen::init()
 {
     sdkbox::PluginSdkboxAds::setListener(this);
-//    cocos2d::Size window_size = cocos2d::Director::getInstance()->getVisibleSize();
-//    float scale = 1-(1/cocos2d::Director::getInstance()->getContentScaleFactor());
-//    cocos2d::Vec2 window_center = Utility::window_center();
-//    float window_bottom = Utility::window_bottom();
-//    float window_left = Utility::window_left();
-//    float scale_x = Utility::scale_vector().x;
-//    bool music_flag = Audio::instance()->music_flag();
-//    bool sfx_flag = Audio::instance()->sfx_flag();
-    
-    
     
     
     Background * background = Background::create(0);
@@ -42,38 +30,10 @@ bool SettingsScreen::init()
     
     
     layout_buttons();
-//    btn_music = cocos2d::ui::Button::create();
-//
-//    if (GameSettings::music_flag()) btn_music->loadTextureNormal("res/ui/btn_music.png");
-//    else                            btn_music->loadTextureNormal("res/ui/btn_music_off.png");
-//
-//    btn_music->setPosition(cocos2d::Vec2(window_center.x-btn_music->getContentSize().width, window_center.y));
-//    btn_music->addClickEventListener(CC_CALLBACK_1(SettingsScreen::callback_music, this));
-//    addChild(btn_music);
-//
-//
-//    btn_sfx = cocos2d::ui::Button::create();
-//
-//    if (GameSettings::sfx_flag())   btn_sfx->loadTextureNormal("res/ui/btn_sound.png");
-//    else                            btn_sfx->loadTextureNormal("res/ui/btn_sound_off.png");
-//
-//    btn_sfx->setPosition(cocos2d::Vec2(window_center.x+btn_sfx->getContentSize().width, window_center.y));
-//    btn_sfx->addClickEventListener(CC_CALLBACK_1(SettingsScreen::callback_sfx, this));
-//    addChild(btn_sfx);
-//
-//
-//    btn_gameplay = cocos2d::ui::Button::create();
-//
-//    if (GameSettings::gameplay_type())  btn_gameplay->loadTextureNormal("res/ui/btn_gameplay_2.png");
-//    else                                btn_gameplay->loadTextureNormal("res/ui/btn_gameplay_1.png");
-//
-//    btn_gameplay->setPosition(cocos2d::Vec2(window_center.x, window_center.y));
-//    btn_gameplay->addClickEventListener(CC_CALLBACK_1(SettingsScreen::callback_gameplay, this));
-//    addChild(btn_gameplay);
     
     
     btn_back_ = UIComponentUtility::create_ui_button("res/ui/btn_back.png",
-                                                     cocos2d::Vec2(0.0, 0.0),
+                                                     cocos2d::Vec2::ZERO,
                                                      cocos2d::Vec2(Utility::ui_left(), Utility::ui_bottom()),
                                                      Utility::content_scale());
     
@@ -107,7 +67,7 @@ void SettingsScreen::callback_music(Ref *pSender)
     bool music_flag = GameSettings::music_flag();
     
     
-    if (music_flag)   button->loadTextureNormal("res/ui/btn_music_off.png");
+    if (music_flag)     button->loadTextureNormal("res/ui/btn_music_off.png");
     else                button->loadTextureNormal("res/ui/btn_music.png");
     
     
@@ -142,7 +102,7 @@ void SettingsScreen::callback_gameplay(cocos2d::Ref *pSender)
     btn_music_->removeFromParent();
     btn_sfx_->removeFromParent();
     btn_gameplay_->removeFromParent();
-//    btn_store_->removeFromParent();
+    btn_store_->removeFromParent();
     btn_help_->removeFromParent();
     
     
@@ -166,9 +126,8 @@ void SettingsScreen::callback_gameplay(cocos2d::Ref *pSender)
                                                                        20,
                                                                        cocos2d::Vec2(0.5, 0.5),
                                                                        panel_ribbon->getPosition(),
-                                                                       cocos2d::Color3B::WHITE);
-    
-    panel_label->enableOutline(cocos2d::Color4B::BLACK, 1);
+                                                                       cocos2d::Color3B::WHITE,
+                                                                       true);
     panel_->addChild(panel_label);
     
     
@@ -221,19 +180,17 @@ void SettingsScreen::callback_gameplay_select(cocos2d::Ref *pSender)
 }
 
 
-//void SettingsScreen::callback_store(cocos2d::Ref *pSender)
-//{
-//
-//
-//    Audio::instance()->play_sfx_button_click();
-//}
+void SettingsScreen::callback_store(cocos2d::Ref *pSender)
+{
+
+
+    Audio::instance()->play_sfx_button_click();
+}
 
 
 void SettingsScreen::callback_help(cocos2d::Ref *pSender)
 {
-//    cocos2d::Scene * scene = HelpScreen::create_scene();
-//    
-//    cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, scene));
+//    cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, HelpScreen::create_scene()));
     
     Audio::instance()->play_sfx_button_click();
 }
@@ -274,13 +231,13 @@ void SettingsScreen::layout_buttons()
     addChild(btn_gameplay_);
     
     
-//    btn_store_ = cocos2d::ui::Button::create();
-//    btn_store_->loadTextureNormal("res/ui/btn_store.png");
-//    btn_store_->setPosition(cocos2d::Vec2(window_center.x+btn_store_->getContentSize().width*1.5, window_center.y));
-//    btn_store_->addClickEventListener(CC_CALLBACK_1(SettingsScreen::callback_store, this));
-//    addChild(btn_store_);
-//
-//
+    btn_store_ = cocos2d::ui::Button::create();
+    btn_store_->loadTextureNormal("res/ui/btn_store.png");
+    btn_store_->setPosition(cocos2d::Vec2(window_center.x+btn_store_->getContentSize().width*1.5, window_center.y));
+    btn_store_->addClickEventListener(CC_CALLBACK_1(SettingsScreen::callback_store, this));
+    addChild(btn_store_);
+
+
     btn_help_ = cocos2d::ui::Button::create();
     btn_help_->loadTextureNormal("res/ui/btn_help.png");
     btn_help_->setPosition(cocos2d::Vec2(window_center.x+btn_help_->getContentSize().width*3, window_center.y));
