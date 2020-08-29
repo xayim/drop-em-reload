@@ -16,6 +16,10 @@
 #define FONT_SKRANJI_BOLD       "fonts/Skranji-Bold.ttf"
 #define FONT_KEN_FUTURE_THIN    "fonts/kenvector_future_thin.ttf"
 #define FONT_KEN_FUTURE         "fonts/kenvector_future.ttf"
+#define GAME_FONT           FONT_KEN_FUTURE_THIN
+#define FONT_SIZE_TITLE     24
+#define FONT_SIZE_HEADING   16
+#define FONT_SIZE_TEXT      12
 #define COIN_PACKAGE_1      160
 #define COIN_PACKAGE_2      ((COIN_PACKAGE_1*2)*(1+0.2))
 #define COIN_PACKAGE_5      ((COIN_PACKAGE_1*5)*(1+0.4))
