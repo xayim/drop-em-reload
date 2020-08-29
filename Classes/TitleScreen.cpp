@@ -11,9 +11,7 @@ cocos2d::Scene * TitleScreen::create_scene()
 {
     cocos2d::Scene * scene = cocos2d::Scene::create();
     
-    TitleScreen * splash = TitleScreen::create();
-    
-    scene->addChild(splash);
+    scene->addChild(TitleScreen::create());
     
     return scene;
 }
@@ -21,54 +19,55 @@ cocos2d::Scene * TitleScreen::create_scene()
 
 bool TitleScreen::init()
 {
+    // init layer
     if (!Layer::init())
     {
         return false;
     }
     
-    printf("Window Size: %f, %f\n", Utility::window_size().width, Utility::window_size().height);
-    printf("Content Scale: %f\n", Utility::content_scale());
     
-    
-    Audio::initialise();
-    
-    timer = 0;
+    // init variables
+    timer = 0.f;
     touch_began = false;
     
     
+    // init audio
+    Audio::initialise();
+    
+    // start background music
+    Audio::instance()->play_music_menu_background();
+    
+    
+    // set game scroll = 0
+    GameSettings::set_scroll_percentage(0.f);
+    
+    
+    // init touch listener
+    cocos2d::EventListenerTouchOneByOne * touch_listener = cocos2d::EventListenerTouchOneByOne::create();
+    touch_listener->onTouchBegan = CC_CALLBACK_2(TitleScreen::on_touch_began, this);
+    touch_listener->setSwallowTouches(true);
+    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touch_listener, this);
+    
+    
+    // create background sprite
     cocos2d::Sprite * background = cocos2d::Sprite::create("res/title_screen_background.png");
     background->setPosition(Utility::window_center());
     background->setScale(Utility::window_size().height/background->getContentSize().height);
     addChild(background);
     
     
-    
+    // create prompt label
     text = UIComponentUtility::create_ui_label("TAP TO PLAY",
-                                               FONT_KEN_FUTURE_THIN,
-                                               24,
+                                               GAME_FONT,
+                                               FONT_SIZE_TITLE,
                                                cocos2d::Vec2(0.5, 0.0),
                                                cocos2d::Vec2(Utility::window_center().x, Utility::ui_bottom()),
-                                               cocos2d::Color3B::WHITE);
-    
-    text->enableOutline(cocos2d::Color4B::BLACK, 1);
+                                               cocos2d::Color3B::WHITE,
+                                               true);
     addChild(text);
     
     
-    
-    cocos2d::EventListenerTouchOneByOne * touch_listener = cocos2d::EventListenerTouchOneByOne::create();
-    touch_listener->onTouchBegan = CC_CALLBACK_2(TitleScreen::on_touch_began, this);
-    touch_listener->setSwallowTouches(true);
-    
-    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touch_listener, this);
- 
-    
-    
-    Audio::instance()->play_music_menu_background();
-    
-    
-    GameSettings::set_scroll_percentage(0.f);
-    
-    
+    // start scheduler
     scheduleUpdate();
     
     
@@ -78,9 +77,7 @@ bool TitleScreen::init()
 
 void TitleScreen::goto_main_menu(float delta_time)
 {
-    cocos2d::Scene * scene = MainMenuScreen::create_scene();
-    
-    cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, scene));
+    cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(TRANSITION_TIME, MainMenuScreen::create_scene()));
 }
 
 
