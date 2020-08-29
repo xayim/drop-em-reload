@@ -37,6 +37,7 @@ bool SettingsScreen::init()
                                                      cocos2d::Vec2(Utility::ui_left(), Utility::ui_bottom()),
                                                      Utility::content_scale());
     
+    
     btn_back_->addClickEventListener(CC_CALLBACK_1(SettingsScreen::callback_back, this));
     addChild(btn_back_);
     

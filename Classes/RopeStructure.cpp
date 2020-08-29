@@ -5,7 +5,7 @@
 #include "Utility.h"
 
 
-RopeStructure::RopeStructure(b2World * world, RopeStructureData * object, cocos2d::Node * parent) : btn_select_(nullptr), btn_reset_(nullptr), label_retry_cnt_(nullptr)
+RopeStructure::RopeStructure(b2World * world, RopeStructureData * object, cocos2d::Node * parent) : btn_select_(nullptr), btn_reset_(nullptr)
 {
     this->world = world;
     this->data_object = object;
@@ -62,15 +62,6 @@ void RopeStructure::set_active(bool active)
     jammer->set_active(active);
     
     for (unsigned int i = 0; i < rope_list.size(); ++i) rope_list.at(i)->set_active(active);
-    
-//    if (!active && btn_reset_)
-//    {
-//        btn_reset_->removeFromParent();
-//        btn_reset_ = NULL;
-//
-//        label_retry_cnt_->removeFromParent();
-//        label_retry_cnt_ = NULL;
-//    }
 }
 
 
@@ -160,7 +151,7 @@ cocos2d::ui::Button * RopeStructure::create_button_select()
     btn_select_->setScale((hinge_list.at(1)->sprite->getPosition().x-hinge_list.at(0)->sprite->getPosition().x)/btn_select_->getContentSize().width,
                           ((hinge_list.at(1)->sprite->getPosition().x-hinge_list.at(0)->sprite->getPosition().x)/btn_select_->getContentSize().width)/2);
     
-//    btn_select_->setOpacity(0);
+    btn_select_->setOpacity(0);
     btn_select_->setUserData(this);
     btn_select_->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
     
@@ -170,32 +161,17 @@ cocos2d::ui::Button * RopeStructure::create_button_select()
 
 cocos2d::ui::Button * RopeStructure::create_button_reset()
 {
-    btn_reset_ = cocos2d::ui::Button::create("res/ui/btn_retry.png");
+    btn_reset_ = UIComponentUtility::create_ui_button("res/ui/btn_retry.png",
+                                                      cocos2d::Vec2(0.5, 0.5), cocos2d::Vec2((data_object->hinge_object_list.at(0)->position.x+data_object->hinge_object_list.at(1)->position.x)/2, (data_object->hinge_object_list.at(0)->position.y+data_object->hinge_object_list.at(1)->position.y)/2)*PTM_RATIO,
+                                                      Utility::content_scale());
+
 
     btn_reset_->setColor(cocos2d::Color3B(192, 177, 170));
-    btn_reset_->setPosition(cocos2d::Vec2((data_object->hinge_object_list.at(0)->position.x+data_object->hinge_object_list.at(1)->position.x)/2,
-                                          (data_object->hinge_object_list.at(0)->position.y+data_object->hinge_object_list.at(1)->position.y)/2)*PTM_RATIO);
-
-    btn_reset_->setScale(Utility::content_scale());
     btn_reset_->setUserData(this);
     btn_reset_->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
     btn_reset_->runAction(cocos2d::RepeatForever::create(cocos2d::RotateBy::create(.5, 15)));
 
     return btn_reset_;
-}
-
-
-cocos2d::Label * RopeStructure::create_label_retry_count(const std::string &label)
-{
-    label_retry_cnt_ = UIComponentUtility::create_ui_label(label,
-                                                           FONT_SKRANJI_REG,
-                                                           16,
-                                                           cocos2d::Vec2(0.5, 0.5),
-                                                           btn_reset_->getPosition(),
-                                                           cocos2d::Color3B::WHITE);
-    label_retry_cnt_->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
-    
-    return label_retry_cnt_;
 }
 
 
@@ -213,16 +189,15 @@ void RopeStructure::remove_select_button()
 }
 
 
-void RopeStructure::remove_reset_count_label()
+void RopeStructure::enable_reset_button(bool enable)
 {
-    label_retry_cnt_->removeFromParent();
-    label_retry_cnt_ = NULL;
+    btn_reset_->setEnabled(enable);
 }
 
 
-void RopeStructure::set_retry_count_label(const std::string &label)
+void RopeStructure::enable_select_button(bool enable)
 {
-    label_retry_cnt_->setString(label);
+    btn_select_->setEnabled(enable);
 }
 
 

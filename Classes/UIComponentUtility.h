@@ -13,6 +13,7 @@ public:
                                                   cocos2d::Vec2 position,
                                                   float scale);
     
+    
     static cocos2d::Label * create_ui_label(const std::string &text,
                                             const std::string &res_name,
                                             float font_size,
@@ -20,7 +21,6 @@ public:
                                             cocos2d::Vec2 position,
                                             const cocos2d::Color3B &color,
                                             bool enable_outline);
-    
 };
 
 #endif /* UIComponentUtility_h */
