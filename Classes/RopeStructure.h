@@ -24,13 +24,16 @@ public:
     
     void update();
     void set_active(bool active);
+    bool is_active() { return is_active_; };
     void reset();
     void destroy_jammer();
     void remove_rope(unsigned int index);
     void remove_select_button();
     void remove_reset_button();
+    void remove_hinge_button(cocos2d::ui::Button * btn_hinge);
     void enable_select_button(bool enable);
     void enable_reset_button(bool enable);
+    void enable_hinge_button(bool enable);
 
     cocos2d::ui::Button * create_button_hinge(unsigned int tag);
     cocos2d::ui::Button * create_button_select();
@@ -40,11 +43,13 @@ public:
     unsigned int rope_count() { return (unsigned int)rope_list.size(); };
     bool has_btn_select() { return btn_select_ != NULL; };
     bool has_btn_reset() { return btn_reset_ != NULL; };
+    bool has_btn_hinbe() { return btn_hinge_.size() > 0; };
     
     
     Jammer * jammer;
     std::vector<Rope *> rope_list;
     std::vector<Hinge *> hinge_list;
+    
     
 private:
     void bind_joint(b2Body * body_a, b2Body * body_b, b2Vec2 anchor_a, b2Vec2 anchor_b);
@@ -55,6 +60,8 @@ private:
     cocos2d::Node * parent;
     cocos2d::ui::Button * btn_select_;
     cocos2d::ui::Button * btn_reset_;
+    std::vector<cocos2d::ui::Button *> btn_hinge_;
+    bool is_active_;
 };
 
 #endif /* RopeStructure_h */

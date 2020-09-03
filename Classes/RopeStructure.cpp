@@ -59,9 +59,14 @@ RopeStructure::~RopeStructure()
 
 void RopeStructure::set_active(bool active)
 {
-    jammer->set_active(active);
+    is_active_ = active;
     
-    for (unsigned int i = 0; i < rope_list.size(); ++i) rope_list.at(i)->set_active(active);
+    if (rope_list.size() > 0)
+    {
+        jammer->set_active(active);
+        
+        for (unsigned int i = 0; i < rope_list.size(); ++i) rope_list.at(i)->set_active(active);
+    }
 }
 
 
@@ -129,7 +134,8 @@ void RopeStructure::bind_joint(b2Body *body_a, b2Body *body_b, b2Vec2 anchor_a, 
 
 cocos2d::ui::Button * RopeStructure::create_button_hinge(unsigned int tag)
 {
-    cocos2d::ui::Button * btn_hinge = cocos2d::ui::Button::create("res/ui/btn_hook.png", "res/ui/btn_hook_pressed.png");
+    cocos2d::ui::Button * btn_hinge = cocos2d::ui::Button::create("res/ui/btn_hook.png", "res/ui/btn_hook_pressed.png", "res/ui/btn_hook.png");
+    
     btn_hinge->setAnchorPoint(cocos2d::Vec2(0.5, 0));
     btn_hinge->setPosition(cocos2d::Vec2(hinge_list.at(tag)->sprite->getPosition().x, hinge_list.at(tag)->sprite->getPosition().y+hinge_list.at(tag)->sprite->getContentSize().height/2*hinge_list.at(tag)->sprite->getScale()));
     
@@ -139,6 +145,8 @@ cocos2d::ui::Button * RopeStructure::create_button_hinge(unsigned int tag)
     btn_hinge->setUserData(this);
     btn_hinge->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
     
+    
+    btn_hinge_.push_back(btn_hinge);
     
     return btn_hinge;
 }
@@ -189,6 +197,19 @@ void RopeStructure::remove_select_button()
 }
 
 
+void RopeStructure::remove_hinge_button(cocos2d::ui::Button * btn_hinge)
+{
+    std::vector<cocos2d::ui::Button *>::iterator btn_del_itr;
+    
+        
+//    btn_del_itr = std::find(btn_hinge_.begin(), btn_hinge_.end(), btn_hinge);
+    
+    btn_hinge_.erase(std::find(btn_hinge_.begin(), btn_hinge_.end(), btn_hinge));
+    
+    btn_hinge->removeFromParent();
+}
+
+
 void RopeStructure::enable_reset_button(bool enable)
 {
     btn_reset_->setEnabled(enable);
@@ -198,6 +219,12 @@ void RopeStructure::enable_reset_button(bool enable)
 void RopeStructure::enable_select_button(bool enable)
 {
     btn_select_->setEnabled(enable);
+}
+
+
+void RopeStructure::enable_hinge_button(bool enable)
+{
+    for (unsigned int i = 0; i < btn_hinge_.size(); ++i)    btn_hinge_.at(i)->setEnabled(enable);
 }
 
 
