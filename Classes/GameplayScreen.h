@@ -12,6 +12,9 @@
 #include "Platform.h"
 #include "RopeStructure.h"
 
+#define TAG_BTN_PAUSE           0
+#define TAG_LABEL_RETRY_CNT     1
+
 
 
 class GameplayScreen : public cocos2d::Layer, public sdkbox::PluginSdkboxAdsListener
@@ -44,36 +47,33 @@ private:
     cocos2d::ui::Button * create_btn_home();
     cocos2d::ui::Button * create_btn_restart();
     cocos2d::ui::Button * create_btn_forward();
-//    cocos2d::Sprite * create_sprite_retry_cnt();
-    cocos2d::Label * create_label_score();
-//    cocos2d::Label * create_label_retry_cnt();
-//    void open_menu_pause();
+    cocos2d::Label * create_label_retries();
+
     void create_layout_pause();
     void create_layout_win();
     void create_layout_lose();
-//    void open_menu_game_win();
-//    void open_menu_game_lose();
-//    void open_menu_store();
+
     void scroll_by(cocos2d::Vec2 delta);
     void remove_rope(RopeStructure * rope_structure, unsigned int rope_index);
     void check_contacts();
-    void add_score(unsigned int score);
-    unsigned int count_jammers();
-    unsigned int count_enemies();
+    unsigned int jammers_count();
+    unsigned int enemies_count();
+    void set_label_retry_cnt(const std::string &label);
+    RopeStructure * rope_structure_active();
+    bool is_game_over() { return flag_gamewin || flag_gamelose; };
     void update_game_state();
     
     
     // CALLBACKS
     void callback_pause(Ref * pSender);
     void callback_reset_jammer(Ref * pSender);
-    void callback_get_retry(Ref * pSender);
     void callback_resume(Ref * pSender);
     void callback_restart(Ref * pSender);
     void callback_home(Ref * pSender);
-    void callback_advance(Ref * pSender);
+    void callback_forward(Ref * pSender);
     void callback_hinge(Ref *pSender);
     void callback_select(Ref *pSender);
-    void callback_store(Ref *pSender);
+    
     bool on_touch_began(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     void on_touch_moved(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     void on_touch_ended(cocos2d::Touch *touch, cocos2d::Event *unused_event);
@@ -84,22 +84,24 @@ private:
     
     
     // GAME
+    rapidjson::Document level_document;
+    
     GameCamera * camera_background_;
     GameCamera * camera_playground_;
     GameCamera * camera_ui_;
+    
     Background * background_;
     Node * ui_;
-    rapidjson::Document level_document;
-    unsigned int score_;
+    
     bool flag_gamepause;
+    bool flag_gamewin;
+    bool flag_gamelose;
     bool flag_gameover;
-//    unsigned int retry_count_;
-//    unsigned int coin_count_;
     
     
     // PHYSICS
-    b2World * world_;
     ContactListener * contact_listener_;
+    b2World * world_;
     b2Body * world_bound_;
     std::vector<Enemy *> enemy_list_;
     std::vector<Platform *> platform_list_;
@@ -107,18 +109,7 @@ private:
     
     
     // GRAPHICS
-//    Node * panel;
-    Node * node_menu_;
-//    cocos2d::Label * label_menu_;
-    cocos2d::Label * label_score_;
-    cocos2d::Label * label_reset_jammer_cnt_;
-    cocos2d::ui::Button * btn_pause_;
-    cocos2d::ui::Button * btn_reset_jammer_;
-//    cocos2d::ui::Button * btn_resume_;
-//    cocos2d::ui::Button * btn_home_;
-//    cocos2d::ui::Button * btn_restart_;
-//    cocos2d::ui::Button * btn_forward_;
-//    cocos2d::Sprite * icon_retry_;
+    Node * menu_node_;
     cocos2d::DrawNode * draw_node;
     
     
