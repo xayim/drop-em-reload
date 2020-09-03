@@ -24,7 +24,11 @@
 #define COIN_PACKAGE_1      160
 #define COIN_PACKAGE_2      ((COIN_PACKAGE_1*2)*(1+0.2))
 #define COIN_PACKAGE_5      ((COIN_PACKAGE_1*5)*(1+0.4))
-#define RETRY_REWARD        10
+#define RETRY_REWARD        3
+#define COLOR_JAMMER_ACTIVE     (cocos2d::Color3B(187, 249, 107))
+#define COLOR_JAMMER_INACTIVE   (cocos2d::Color3B(46.75, 62.25, 26.75))
+#define COLOR_ROPE_ACTIVE     (cocos2d::Color3B(151, 93, 113))
+#define COLOR_ROPE_INACTIVE   (cocos2d::Color3B(37.75, 23.25, 28.25))
 
 
 #endif /* Definitions_h */
