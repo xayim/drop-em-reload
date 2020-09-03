@@ -28,7 +28,7 @@ Jammer::Jammer(b2World * world, RoundBodyData * object, cocos2d::Node * parent)
     sprite->setPosition(cocos2d::Vec2(body->GetPosition().x, body->GetPosition().y)*PTM_RATIO);
     sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(body->GetAngle()));
     sprite->setScale(PTM_RATIO/sprite->getContentSize().height*0.8);
-    sprite->setColor(cocos2d::Color3B(187, 249, 107));
+    sprite->setColor(COLOR_JAMMER_INACTIVE);
     sprite->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
     
     
@@ -48,10 +48,8 @@ Jammer::~Jammer()
 
 void Jammer::set_active(bool active)
 {
-    cocos2d::Color3B color = sprite->getColor();
-    
-    if (active) sprite->setColor(cocos2d::Color3B(color.r*BRIGHT_FACTOR, color.g*BRIGHT_FACTOR, color.b*BRIGHT_FACTOR));
-    else        sprite->setColor(cocos2d::Color3B(color.r/BRIGHT_FACTOR, color.g/BRIGHT_FACTOR, color.b/BRIGHT_FACTOR));
+    if (active)     sprite->setColor(COLOR_JAMMER_ACTIVE);
+    else            sprite->setColor(COLOR_JAMMER_INACTIVE);
 }
 
 

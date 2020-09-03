@@ -14,7 +14,6 @@ RopeBody::RopeBody(b2World * world, PolygonBodyData * object, cocos2d::Node * pa
     body = (b2Body *)world->CreateBody(&body_def);
     
     
-    
     b2FixtureDef fixture_def;
     b2PolygonShape shape;
     b2Vec2 *vertices;
@@ -38,7 +37,7 @@ RopeBody::RopeBody(b2World * world, PolygonBodyData * object, cocos2d::Node * pa
     sprite->setPosition(cocos2d::Vec2(body->GetPosition().x, body->GetPosition().y)*PTM_RATIO);
     sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(body->GetAngle()));
     sprite->setScale(PTM_RATIO/sprite->getContentSize().height*0.4);
-    sprite->setColor(cocos2d::Color3B(151, 93, 113));
+    sprite->setColor(COLOR_ROPE_INACTIVE);
     sprite->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
     
     
@@ -58,10 +57,8 @@ RopeBody::~RopeBody()
 
 void RopeBody::set_active(bool active)
 {
-    cocos2d::Color3B color = sprite->getColor();
-    
-    if (active) sprite->setColor(cocos2d::Color3B(color.r*BRIGHT_FACTOR, color.g*BRIGHT_FACTOR, color.b*BRIGHT_FACTOR));
-    else        sprite->setColor(cocos2d::Color3B(color.r/BRIGHT_FACTOR, color.g/BRIGHT_FACTOR, color.b/BRIGHT_FACTOR));
+    if (active)     sprite->setColor(COLOR_ROPE_ACTIVE);
+    else            sprite->setColor(COLOR_ROPE_INACTIVE);
 }
 
 
